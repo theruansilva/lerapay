@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GatewayModule } from './modules/gateway/gateway.module';
 import { FeesModule } from './modules/fees/fees.module';
+import { CheckoutModule } from './modules/checkout/checkout.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { FeesModule } from './modules/fees/fees.module';
     AuthModule,
     GatewayModule,
     FeesModule,
+    CheckoutModule,
   ],
   controllers: [],
   providers: [],
