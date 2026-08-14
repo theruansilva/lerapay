@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CheckoutLink, Order, User } from '../../database/entities';
 import { CheckoutLinkService } from './checkout-link.service';
-import { CheckoutLinkController } from './checkout-link.controller';
+import { PixPaymentService } from './pix-payment.service';
+import { CheckoutController } from './checkout.controller';
 import { GatewayModule } from '../gateway/gateway.module';
 import { FeesModule } from '../fees/fees.module';
 
@@ -12,8 +13,8 @@ import { FeesModule } from '../fees/fees.module';
     GatewayModule,
     FeesModule,
   ],
-  controllers: [CheckoutLinkController],
-  providers: [CheckoutLinkService],
-  exports: [CheckoutLinkService],
+  controllers: [CheckoutController],
+  providers: [CheckoutLinkService, PixPaymentService],
+  exports: [CheckoutLinkService, PixPaymentService],
 })
 export class CheckoutModule {}
