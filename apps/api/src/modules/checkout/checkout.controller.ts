@@ -11,7 +11,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { AuthGuard } from '@nestjs/passport';
 import { CheckoutLinkService } from './checkout-link.service';
 import { PixPaymentService } from './pix-payment.service';
-import { CreateCheckoutLinkDto, PixPaymentDto } from './dto/checkout.dto';
+import { CardPaymentService } from './card-payment.service';
+import { CreateCheckoutLinkDto, PixPaymentDto, CardPaymentDto } from './dto/checkout.dto';
 
 @ApiTags('Checkout')
 @Controller('api/checkout')
@@ -19,6 +20,7 @@ export class CheckoutController {
   constructor(
     private readonly linkService: CheckoutLinkService,
     private readonly pixPaymentService: PixPaymentService,
+    private readonly cardPaymentService: CardPaymentService,
   ) {}
 
   @Post('links')
@@ -58,6 +60,16 @@ export class CheckoutController {
     @Body() dto: PixPaymentDto,
   ) {
     return this.pixPaymentService.processPixPayment(slug, dto);
+  }
+
+  @Post('pay/:slug/card')
+  @ApiOperation({ summary: 'Process Credit Card payment for checkout link' })
+  @ApiResponse({ status: 201, description: 'Card order processed' })
+  async payCard(
+    @Param('slug') slug: string,
+    @Body() dto: CardPaymentDto,
+  ) {
+    return this.cardPaymentService.processCardPayment(slug, dto);
   }
 
   @Get('orders/:externalReference')
