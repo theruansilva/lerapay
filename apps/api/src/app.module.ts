@@ -1,6 +1,8 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CorrelationMiddleware } from './common/middleware/correlation.middleware';
+import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -8,6 +10,8 @@ import { CorrelationMiddleware } from './common/middleware/correlation.middlewar
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],
     }),
+    DatabaseModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
