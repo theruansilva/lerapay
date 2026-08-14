@@ -1,0 +1,108 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DataSource } from 'typeorm';
+import {
+  WebhookEvent,
+  Order,
+  OrderStatus,
+  CheckoutLink,
+  CheckoutLinkStatus,
+  Withdrawal,
+  WithdrawalStatus,
+} from '../../database/entities';
+
+@Injectable()
+export class WebhookProcessorService {
+  private readonly logger = new Logger(WebhookProcessorService.name);
+
+  constructor(
+    @InjectRepository(WebhookEvent)
+    private readonly eventRepo: Repository<WebhookEvent>,
+    @InjectRepository(Order)
+    private readonly orderRepo: Repository<Order>,
+    @InjectRepository(CheckoutLink)
+    private readonly linkRepo: Repository<CheckoutLink>,
+    @InjectRepository(Withdrawal)
+    private readonly withdrawalRepo: Repository<Withdrawal>,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async processEvent(event: WebhookEvent): Promise<boolean> {
+    if (event.processed) {
+      this.logger.warn(`Event ${event.id} already processed. Skipping (idempotency).`);
+      return true;
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const payload = event.payload;
+      const eventType = event.eventType;
+      const data = payload?.data || {};
+      const externalReference = data.externalReference || event.externalReference;
+      const status = data.status;
+
+      this.logger.log(`Processing event ${event.id} of type ${eventType} for ref ${externalReference}`);
+
+      if (eventType === 'PAYMENT_PIX' || eventType === 'PAYMENT_CARD') {
+        if (externalReference) {
+          const order = await queryRunner.manager.findOne(Order, {
+            where: { externalReference },
+            relations: ['checkoutLink'],
+          });
+
+          if (order) {
+            if (status === 'APPROVED') {
+              order.status = OrderStatus.APPROVED;
+              if (order.checkoutLink) {
+                order.checkoutLink.status = CheckoutLinkStatus.PAID;
+                await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
+              }
+            } else if (status === 'DENIED') {
+              order.status = OrderStatus.DENIED;
+            } else if (status === 'EXPIRED') {
+              order.status = OrderStatus.EXPIRED;
+            }
+            await queryRunner.manager.save(Order, order);
+          }
+        }
+      } else if (eventType === 'WITHDRAWAL') {
+        const withdrawalId = data.id;
+        if (withdrawalId) {
+          const withdrawal = await queryRunner.manager.findOne(Withdrawal, {
+            where: { gatewayWithdrawalId: String(withdrawalId) },
+          });
+
+          if (withdrawal) {
+            if (status === 'APPROVED') {
+              withdrawal.status = WithdrawalStatus.APPROVED;
+            } else if (status === 'DENIED') {
+              withdrawal.status = WithdrawalStatus.DENIED;
+            }
+            await queryRunner.manager.save(Withdrawal, withdrawal);
+          }
+        }
+      }
+
+      event.processed = true;
+      event.processingError = null;
+      await queryRunner.manager.save(WebhookEvent, event);
+
+      await queryRunner.commitTransaction();
+      this.logger.log(`Event ${event.id} processed successfully`);
+      return true;
+    } catch (error: unknown) {
+      await queryRunner.rollbackTransaction();
+      const errorMsg = error instanceof Error ? error.message : 'Unknown processing error';
+      this.logger.error(`Error processing webhook event ${event.id}: ${errorMsg}`);
+      event.processed = false;
+      event.processingError = errorMsg;
+      await this.eventRepo.save(event);
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+}
