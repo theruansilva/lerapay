@@ -4,6 +4,7 @@ import { CorrelationMiddleware } from './common/middleware/correlation.middlewar
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GatewayModule } from './modules/gateway/gateway.module';
+import { FeesModule } from './modules/fees/fees.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GatewayModule } from './modules/gateway/gateway.module';
     DatabaseModule,
     AuthModule,
     GatewayModule,
+    FeesModule,
   ],
   controllers: [],
   providers: [],
