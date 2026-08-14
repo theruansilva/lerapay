@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order, Withdrawal } from '../../database/entities';
 import { WalletService } from './wallet.service';
+import { WithdrawalService } from './withdrawal.service';
 import { WalletController } from './wallet.controller';
 import { GatewayModule } from '../gateway/gateway.module';
 
@@ -11,7 +12,7 @@ import { GatewayModule } from '../gateway/gateway.module';
     GatewayModule,
   ],
   controllers: [WalletController],
-  providers: [WalletService],
-  exports: [WalletService],
+  providers: [WalletService, WithdrawalService],
+  exports: [WalletService, WithdrawalService],
 })
 export class WalletModule {}
