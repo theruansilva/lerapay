@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: lerapay_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lerapay_baas
+      MYSQL_USER: lerapay
+      MYSQL_PASSWORD: lerapaypassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: lerapay_api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_NAME: lerapay_baas
+      JWT_SECRET: lerapay_production_super_secret_jwt_key_2026
+      GATEWAY_API_URL: https://api.branchpay.com.br/api
+      GATEWAY_EMAIL: ${GATEWAY_EMAIL:-}
+      GATEWAY_PASSWORD: ${GATEWAY_PASSWORD:-}
+      GATEWAY_CLIENT_CODE: ${GATEWAY_CLIENT_CODE:-}
+      GATEWAY_STORE_KEY: ${GATEWAY_STORE_KEY:-}
+      GATEWAY_WEBHOOK_SECRET: ${GATEWAY_WEBHOOK_SECRET:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: lerapay_web
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
