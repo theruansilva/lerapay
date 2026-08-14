@@ -6,6 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { GatewayModule } from './modules/gateway/gateway.module';
 import { FeesModule } from './modules/fees/fees.module';
 import { CheckoutModule } from './modules/checkout/checkout.module';
+import { WebhooksModule } from './modules/webhooks/webhooks.module';
+import { WalletModule } from './modules/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { CheckoutModule } from './modules/checkout/checkout.module';
     GatewayModule,
     FeesModule,
     CheckoutModule,
+    WebhooksModule,
+    WalletModule,
   ],
   controllers: [],
   providers: [],
