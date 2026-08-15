@@ -15,7 +15,7 @@ import {
   ExternalLink,
   Copy,
 } from 'lucide-react';
-
+import { maskCPF, validateCPF, maskCNPJ, validateCNPJ } from '../utils/validators';
 interface WalletData {
   balanceCents: number;
   formattedBrl: string;
@@ -116,14 +116,36 @@ export function DashboardPage() {
     }
   };
 
+  const handlePixKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (withdrawKeyType === 'CPF') {
+      setWithdrawPixKey(maskCPF(val));
+    } else if (withdrawKeyType === 'CNPJ') {
+      setWithdrawPixKey(maskCNPJ(val));
+    } else {
+      setWithdrawPixKey(val);
+    }
+  };
+
   const handleWithdrawal = async (e: React.FormEvent) => {
     e.preventDefault();
     setWithdrawError('');
+
+    // Validate CPF / CNPJ Pix Key
+    if (withdrawKeyType === 'CPF' && !validateCPF(withdrawPixKey)) {
+      setWithdrawError('A Chave Pix (CPF) informada é inválida.');
+      return;
+    }
+    if (withdrawKeyType === 'CNPJ' && !validateCNPJ(withdrawPixKey)) {
+      setWithdrawError('A Chave Pix (CNPJ) informada é inválida.');
+      return;
+    }
+
     try {
       const amountCents = Math.round(parseFloat(withdrawAmount.replace(',', '.')) * 100);
       await api.post('/api/wallet/withdrawals', {
         amountCents,
-        pixKey: withdrawPixKey,
+        pixKey: withdrawPixKey.replace(/\D/g, '') || withdrawPixKey,
         pixKeyType: withdrawKeyType,
       });
       setIsWithdrawModalOpen(false);
@@ -493,7 +515,10 @@ export function DashboardPage() {
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">Tipo da Chave</label>
                 <select
                   value={withdrawKeyType}
-                  onChange={(e) => setWithdrawKeyType(e.target.value)}
+                  onChange={(e) => {
+                    setWithdrawKeyType(e.target.value);
+                    setWithdrawPixKey('');
+                  }}
                   className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] text-sm transition"
                 >
                   <option value="EMAIL">E-mail</option>
@@ -510,8 +535,17 @@ export function DashboardPage() {
                   type="text"
                   required
                   value={withdrawPixKey}
-                  onChange={(e) => setWithdrawPixKey(e.target.value)}
-                  placeholder="sua-chave@pix.com"
+                  onChange={handlePixKeyChange}
+                  placeholder={
+                    withdrawKeyType === 'CPF'
+                      ? '000.000.000-00'
+                      : withdrawKeyType === 'CNPJ'
+                        ? '00.000.000/0000-00'
+                        : withdrawKeyType === 'PHONE'
+                          ? '(11) 90000-0000'
+                          : 'sua-chave@pix.com'
+                  }
+                  maxLength={withdrawKeyType === 'CPF' ? 14 : withdrawKeyType === 'CNPJ' ? 18 : 60}
                   className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] text-sm font-mono transition"
                 />
               </div>

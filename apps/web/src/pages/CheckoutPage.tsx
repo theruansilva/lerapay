@@ -1,23 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { QRCodeSVG } from 'qrcode.react';
 import { api } from '../api/client';
+import { QRCodeSVG } from 'qrcode.react';
 import {
-  QrCode,
-  CreditCard,
   CheckCircle2,
-  XCircle,
+  CreditCard,
+  QrCode,
   Copy,
-  Printer,
   ShieldCheck,
   Clock,
   Lock,
+  Printer,
+  AlertCircle,
+  XCircle,
 } from 'lucide-react';
+import {
+  maskCPF,
+  validateCPF,
+  maskCardNumber,
+  detectCardBrand,
+  validateCardLuhn,
+  maskMonth,
+  maskYear,
+  maskCVV,
+  validateCardExpiration,
+  type CardBrandType,
+} from '../utils/validators';
 
 interface CheckoutLink {
   id: string;
-  slug: string;
   title: string;
+  slug: string;
   description?: string;
   amountCents: number;
   status: string;
@@ -27,7 +40,6 @@ interface CheckoutLink {
     email: string;
   };
 }
-
 interface InstallmentPlan {
   installments: number;
   feePercent: number;
@@ -124,16 +136,49 @@ export function CheckoutPage() {
     return () => clearInterval(interval);
   }, [activeOrder]);
 
+  // Mask & input handlers
+  const handlePixDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPixPayerDoc(maskCPF(e.target.value));
+  };
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = maskCardNumber(e.target.value);
+    setCardNumber(masked);
+    const detected = detectCardBrand(masked);
+    if (detected !== 'Outro') {
+      setCardBrand(detected);
+    }
+  };
+
+  const handleCardMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardMonth(maskMonth(e.target.value));
+  };
+
+  const handleCardYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardYear(maskYear(e.target.value));
+  };
+
+  const handleCardCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardCvv(maskCVV(e.target.value, cardBrand as CardBrandType));
+  };
+
   const handleGeneratePix = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPixLoading(true);
     setError('');
+
+    // CPF validation if provided
+    if (pixPayerDoc && !validateCPF(pixPayerDoc)) {
+      setError('O CPF informado é inválido. Por favor, verifique os 11 dígitos.');
+      return;
+    }
+
+    setPixLoading(true);
 
     try {
       const res = await api.post(`/api/checkout/pay/${slug}/pix`, {
         payerName: pixPayerName,
         payerEmail: pixPayerEmail,
-        payerDocument: pixPayerDoc,
+        payerDocument: pixPayerDoc.replace(/\D/g, '') || undefined,
       });
       setActiveOrder(res.data);
     } catch (err: unknown) {
@@ -146,18 +191,45 @@ export function CheckoutPage() {
 
   const handleCardPayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCardLoading(true);
     setError('');
+
+    // Card Number Luhn validation
+    const cleanCard = cardNumber.replace(/\D/g, '');
+    if (!validateCardLuhn(cleanCard)) {
+      setError('Número de cartão de crédito inválido. Por favor, verifique a numeração digitada.');
+      return;
+    }
+
+    // Card Expiration validation
+    if (!validateCardExpiration(cardMonth, cardYear)) {
+      setError('Data de validade do cartão inválida ou vencida.');
+      return;
+    }
+
+    // CVV validation
+    const minCvvLen = cardBrand === 'Amex' ? 4 : 3;
+    if (cardCvv.length < minCvvLen) {
+      setError(`Código de segurança (CVV) inválido. São necessários ${minCvvLen} dígitos.`);
+      return;
+    }
+
+    // Cardholder validation
+    if (cardHolder.trim().length < 3) {
+      setError('Informe o nome impresso no cartão.');
+      return;
+    }
+
+    setCardLoading(true);
 
     const selectedPlan = installmentPlans.find((p) => p.installments === cardInstallments);
     const feePercent = selectedPlan ? selectedPlan.feePercent : 2.99;
 
     try {
       const res = await api.post(`/api/checkout/pay/${slug}/card`, {
-        cardNumber: cardNumber.replace(/\s/g, ''),
-        cardHolderName: cardHolder,
-        cardExpirationMonth: cardMonth,
-        cardExpirationYear: cardYear,
+        cardNumber: cleanCard,
+        cardHolderName: cardHolder.trim(),
+        cardExpirationMonth: cardMonth.padStart(2, '0'),
+        cardExpirationYear: cardYear.length === 2 ? `20${cardYear}` : cardYear,
         cardCvv,
         installments: Number(cardInstallments),
         feePercent,
@@ -171,7 +243,6 @@ export function CheckoutPage() {
       setCardLoading(false);
     }
   };
-
   const copyEmvToClipboard = () => {
     if (activeOrder?.pixEmv) {
       navigator.clipboard.writeText(activeOrder.pixEmv);
@@ -313,8 +384,8 @@ export function CheckoutPage() {
                 setActiveOrder(null);
               }}
               className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'PIX'
-                  ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
-                  : 'text-slate-400 hover:text-white'
+                ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
+                : 'text-slate-400 hover:text-white'
                 }`}
             >
               <QrCode className="w-4 h-4" /> Pagar com Pix
@@ -326,8 +397,8 @@ export function CheckoutPage() {
                 setActiveOrder(null);
               }}
               className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'CARD'
-                  ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
-                  : 'text-slate-400 hover:text-white'
+                ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
+                : 'text-slate-400 hover:text-white'
                 }`}
             >
               <CreditCard className="w-4 h-4" /> Cartão de Crédito
@@ -364,13 +435,21 @@ export function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">CPF (opcional)</label>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <label className="block text-xs font-semibold text-slate-300">CPF do Pagador (opcional)</label>
+                      {pixPayerDoc && validateCPF(pixPayerDoc) && (
+                        <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" /> Válido
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
                       value={pixPayerDoc}
-                      onChange={(e) => setPixPayerDoc(e.target.value)}
+                      onChange={handlePixDocChange}
                       placeholder="000.000.000-00"
-                      className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
+                      maxLength={14}
+                      className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#958BC2] transition"
                     />
                   </div>
 
@@ -420,15 +499,26 @@ export function CheckoutPage() {
           {method === 'CARD' && (
             <form onSubmit={handleCardPayment} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Número do Cartão</label>
-                <input
-                  type="text"
-                  required
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  placeholder="4111 1111 1111 1111"
-                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#958BC2] transition"
-                />
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-300">Número do Cartão</label>
+                  {cardBrand && (
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-[#958BC2]/20 text-[#958BC2] font-bold border border-[#958BC2]/30">
+                      {cardBrand}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={cardNumber}
+                    onChange={handleCardNumberChange}
+                    placeholder="0000 0000 0000 0000"
+                    maxLength={19}
+                    className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#958BC2] transition"
+                  />
+                  <CreditCard className="absolute right-3.5 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
+                </div>
               </div>
 
               <div>
@@ -438,7 +528,7 @@ export function CheckoutPage() {
                   required
                   value={cardHolder}
                   onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
-                  placeholder="NOME DO TITULAR"
+                  placeholder="NOME COMO NO CARTÃO"
                   className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
                 />
               </div>
@@ -451,7 +541,7 @@ export function CheckoutPage() {
                     required
                     maxLength={2}
                     value={cardMonth}
-                    onChange={(e) => setCardMonth(e.target.value)}
+                    onChange={handleCardMonthChange}
                     placeholder="MM"
                     className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
                   />
@@ -463,7 +553,7 @@ export function CheckoutPage() {
                     required
                     maxLength={2}
                     value={cardYear}
-                    onChange={(e) => setCardYear(e.target.value)}
+                    onChange={handleCardYearChange}
                     placeholder="AA"
                     className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
                   />
@@ -473,10 +563,10 @@ export function CheckoutPage() {
                   <input
                     type="text"
                     required
-                    maxLength={4}
+                    maxLength={cardBrand === 'Amex' ? 4 : 3}
                     value={cardCvv}
-                    onChange={(e) => setCardCvv(e.target.value)}
-                    placeholder="123"
+                    onChange={handleCardCvvChange}
+                    placeholder={cardBrand === 'Amex' ? '1234' : '123'}
                     className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
                   />
                 </div>
@@ -518,6 +608,6 @@ export function CheckoutPage() {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
