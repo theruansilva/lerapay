@@ -160,3 +160,29 @@ export function validateCardExpiration(month: string, year: string): boolean {
 
  return true;
 }
+
+// --- VALORES EM REAIS (BRL) ---
+
+export function maskCurrencyBRL(value: string): string {
+ const digits = value.replace(/\D/g, '');
+ if (!digits) return '0,00';
+ const num = parseInt(digits, 10) / 100;
+ return num.toLocaleString('pt-BR', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+ });
+}
+
+export function parseCurrencyBRLToCents(value: string): number {
+ const digits = value.replace(/\D/g, '');
+ return parseInt(digits, 10) || 0;
+}
+
+export function formatCentsToBRL(cents: number, withPrefix = true): string {
+ const num = (cents || 0) / 100;
+ const formatted = num.toLocaleString('pt-BR', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+ });
+ return withPrefix ? `R$ ${formatted}` : formatted;
+}

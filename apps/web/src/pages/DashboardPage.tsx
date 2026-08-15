@@ -15,7 +15,15 @@ import {
   ExternalLink,
   Copy,
 } from 'lucide-react';
-import { maskCPF, validateCPF, maskCNPJ, validateCNPJ } from '../utils/validators';
+import {
+  maskCPF,
+  validateCPF,
+  maskCNPJ,
+  validateCNPJ,
+  maskCurrencyBRL,
+  parseCurrencyBRLToCents,
+} from '../utils/validators';
+
 interface WalletData {
   balanceCents: number;
   formattedBrl: string;
@@ -101,7 +109,11 @@ export function DashboardPage() {
   const handleCreateLink = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const amountCents = Math.round(parseFloat(newLinkAmount.replace(',', '.')) * 100);
+      const amountCents = parseCurrencyBRLToCents(newLinkAmount);
+      if (amountCents <= 0) {
+        alert('Informe um valor válido maior que zero.');
+        return;
+      }
       await api.post('/api/checkout/links', {
         title: newLinkTitle,
         amountCents,
@@ -142,7 +154,11 @@ export function DashboardPage() {
     }
 
     try {
-      const amountCents = Math.round(parseFloat(withdrawAmount.replace(',', '.')) * 100);
+      const amountCents = parseCurrencyBRLToCents(withdrawAmount);
+      if (amountCents <= 0) {
+        setWithdrawError('Informe um valor de saque válido maior que zero.');
+        return;
+      }
       await api.post('/api/wallet/withdrawals', {
         amountCents,
         pixKey: withdrawPixKey.replace(/\D/g, '') || withdrawPixKey,
@@ -457,8 +473,8 @@ export function DashboardPage() {
                   type="text"
                   required
                   value={newLinkAmount}
-                  onChange={(e) => setNewLinkAmount(e.target.value)}
-                  placeholder="Ex: 99,90"
+                  onChange={(e) => setNewLinkAmount(maskCurrencyBRL(e.target.value))}
+                  placeholder="0,00"
                   className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] font-mono text-sm transition"
                 />
               </div>
@@ -505,8 +521,8 @@ export function DashboardPage() {
                   type="text"
                   required
                   value={withdrawAmount}
-                  onChange={(e) => setWithdrawAmount(e.target.value)}
-                  placeholder="Ex: 150,00"
+                  onChange={(e) => setWithdrawAmount(maskCurrencyBRL(e.target.value))}
+                  placeholder="0,00"
                   className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] font-mono text-sm transition"
                 />
               </div>

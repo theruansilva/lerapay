@@ -9,8 +9,10 @@ import {
   validateCardLuhn,
   validateCardExpiration,
   maskCVV,
+  maskCurrencyBRL,
+  parseCurrencyBRLToCents,
+  formatCentsToBRL,
 } from './validators';
-
 describe('Validators & Masks Utility', () => {
   describe('CPF', () => {
     it('should format CPF correctly', () => {
@@ -75,6 +77,25 @@ describe('Validators & Masks Utility', () => {
     it('should mask CVV according to brand', () => {
       expect(maskCVV('12345', 'Visa')).toBe('123');
       expect(maskCVV('12345', 'Amex')).toBe('1234');
+    });
+  });
+
+  describe('BRL Currency', () => {
+    it('should format numbers to BRL currency string', () => {
+      expect(maskCurrencyBRL('10000')).toBe('100,00');
+      expect(maskCurrencyBRL('150050')).toBe('1.500,50');
+      expect(maskCurrencyBRL('0')).toBe('0,00');
+    });
+
+    it('should parse formatted BRL currency string to integer cents', () => {
+      expect(parseCurrencyBRLToCents('1.500,50')).toBe(150050);
+      expect(parseCurrencyBRLToCents('99,90')).toBe(9990);
+      expect(parseCurrencyBRLToCents('R$ 2.000,00')).toBe(200000);
+    });
+
+    it('should format cents into BRL string', () => {
+      expect(formatCentsToBRL(150050)).toBe('R$ 1.500,50');
+      expect(formatCentsToBRL(150050, false)).toBe('1.500,50');
     });
   });
 });
