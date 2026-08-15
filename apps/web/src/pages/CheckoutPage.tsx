@@ -264,15 +264,14 @@ export function CheckoutPage() {
         {/* Left Column: Order Summary */}
         <div className="md:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl">
-              L
-            </div>
-            <div>
-              <h1 className="font-bold text-base text-white">Lera Pay</h1>
-              <p className="text-xs text-slate-400">Checkout Seguro</p>
+            <a href="/" className="flex items-center gap-2">
+              <img src="/assets/logo.png" alt="Lera Pay" className="h-8 w-auto object-contain" />
+            </a>
+            <div className="border-l border-slate-700 pl-3">
+              <h1 className="font-bold text-sm text-white">Checkout Seguro</h1>
+              <p className="text-[11px] text-slate-400">Gateway Lera Pay</p>
             </div>
           </div>
-
           <div className="border-t border-b border-slate-800 py-4 space-y-2">
             <h2 className="text-xl font-bold text-white leading-tight">{link?.title}</h2>
             {link?.description && <p className="text-xs text-slate-400">{link.description}</p>}
@@ -310,11 +309,10 @@ export function CheckoutPage() {
                 setMethod('PIX');
                 setActiveOrder(null);
               }}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${
-                method === 'PIX'
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'PIX'
                   ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
             >
               <QrCode className="w-4 h-4" /> Pagar com Pix
             </button>
@@ -324,11 +322,10 @@ export function CheckoutPage() {
                 setMethod('CARD');
                 setActiveOrder(null);
               }}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${
-                method === 'CARD'
+              className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'CARD'
                   ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
             >
               <CreditCard className="w-4 h-4" /> Cartão de Crédito
             </button>

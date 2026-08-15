@@ -185,20 +185,19 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-16">
+    <div className="min-h-screen bg-black text-slate-100 pb-16 font-sans">
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-10 px-6 py-4">
+      <header className="border-b border-[#222222] bg-[#0E0E0E]/80 backdrop-blur sticky top-0 z-10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl">
-              L
-            </div>
-            <div>
-              <h1 className="font-bold text-lg leading-none">Lera Pay BaaS</h1>
-              <p className="text-xs text-slate-400 mt-0.5">Portal do Lojista</p>
+            <a href="/" className="flex items-center gap-2">
+              <img src="/assets/logo.png" alt="Lera Pay" className="h-8 w-auto object-contain" />
+            </a>
+            <div className="border-l border-slate-700 pl-3">
+              <h1 className="font-bold text-sm leading-none text-white">Portal do Lojista</h1>
+              <p className="text-[11px] text-slate-400 mt-0.5">Banking as a Service</p>
             </div>
           </div>
-
           <div className="flex items-center gap-3">
             <button
               onClick={fetchDashboardData}
