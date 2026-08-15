@@ -3,8 +3,8 @@ WORKDIR /app
 
 COPY package.json package-lock.json* ./
 COPY apps/web/package.json apps/web/tsconfig.json apps/web/vite.config.ts apps/web/tailwind.config.js apps/web/postcss.config.js apps/web/index.html apps/web/
+COPY apps/web/public apps/web/public
 COPY apps/web/src apps/web/src
-
 RUN npm install --workspace=apps/web
 RUN npm run build --workspace=apps/web
 

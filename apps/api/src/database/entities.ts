@@ -55,7 +55,6 @@ export class CheckoutLink {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index({ unique: true })
   @Column({ unique: true })
   slug: string;
 
@@ -113,7 +112,6 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index({ unique: true })
   @Column({ unique: true })
   externalReference: string; // Correlates to BaaS order ID in Gateway
 
