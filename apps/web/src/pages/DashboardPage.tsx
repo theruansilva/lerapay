@@ -219,48 +219,48 @@ export function DashboardPage() {
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Top Cards: Balance and Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+          <div className="md:col-span-2 bg-gradient-to-br from-[#161616] to-[#121212] border border-[#282828] rounded-3xl p-7 shadow-2xl relative overflow-hidden flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+              <div className="flex items-center gap-2 text-[#958BC2] text-sm font-semibold">
                 <Wallet className="w-5 h-5" /> Saldo Disponível
               </div>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
-                Lera Box Gateway
+              <span className="text-xs px-3 py-1 rounded-full bg-[#958BC2]/10 text-[#958BC2] border border-[#958BC2]/30 font-mono font-bold">
+                Lera Box BaaS
               </span>
             </div>
 
             <div>
-              <div className="text-4xl font-extrabold tracking-tight text-white font-mono">
+              <div className="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono">
                 {wallet ? wallet.formattedBrl : 'Carregando...'}
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                Saldo sincronizado com o gateway em centavos
+              <p className="text-xs text-slate-400 mt-2">
+                Saldo disponível para saque imediato via Pix
               </p>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-8">
               <button
                 onClick={() => setIsWithdrawModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition"
+                className="flex items-center gap-2 px-5 py-3 bg-[#958BC2] hover:bg-[#7a6fa8] text-white font-bold text-xs rounded-xl shadow-lg shadow-[#958BC2]/25 transition"
               >
                 <ArrowUpRight className="w-4 h-4" /> Solicitar Saque Pix
               </button>
             </div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div className="bg-[#141414] border border-[#282828] rounded-3xl p-7 flex flex-col justify-between shadow-xl">
             <div>
-              <h2 className="font-semibold text-white text-base mb-1">Links de Pagamento</h2>
-              <p className="text-xs text-slate-400">
-                Gere checkouts Pix e Cartão com parcelamento dinâmico.
+              <h2 className="font-bold text-white text-base mb-1.5">Links de Pagamento</h2>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Gere checkouts Pix e Cartão com parcelamento em até 21x.
               </p>
             </div>
 
             <button
               onClick={() => setIsLinkModalOpen(true)}
-              className="flex items-center justify-center gap-2 w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold text-xs rounded-xl transition"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#1F1F1F] hover:bg-[#282828] border border-[#333333] hover:border-[#958BC2] text-white font-bold text-xs rounded-xl transition"
             >
-              <PlusCircle className="w-4 h-4 text-emerald-400" /> Criar Novo Link
+              <PlusCircle className="w-4 h-4 text-[#958BC2]" /> Criar Novo Link
             </button>
           </div>
         </div>
@@ -269,7 +269,7 @@ export function DashboardPage() {
         <section className="space-y-4">
           <h2 className="text-lg font-bold text-white">Meus Links de Checkout</h2>
           {links.length === 0 ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center text-slate-400 text-sm">
+            <div className="bg-[#141414] border border-[#262626] rounded-2xl p-8 text-center text-slate-400 text-sm">
               Nenhum link de pagamento gerado ainda. Clique em "Criar Novo Link" para começar.
             </div>
           ) : (
@@ -277,15 +277,15 @@ export function DashboardPage() {
               {links.map((link) => (
                 <div
                   key={link.id}
-                  className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 flex flex-col justify-between space-y-4 transition"
+                  className="bg-[#141414] border border-[#262626] hover:border-[#958BC2]/50 rounded-2xl p-5 flex flex-col justify-between space-y-4 transition shadow-lg"
                 >
                   <div>
                     <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
                       <span className="font-mono">{link.slug}</span>
-                      <span className="text-emerald-400 font-semibold">{link.status}</span>
+                      <span className="text-[#958BC2] font-semibold">{link.status}</span>
                     </div>
                     <h3 className="font-bold text-white text-base line-clamp-1">{link.title}</h3>
-                    <div className="text-xl font-bold font-mono text-emerald-400 mt-2">
+                    <div className="text-xl font-bold font-mono text-[#958BC2] mt-2">
                       {(link.amountCents / 100).toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
@@ -293,10 +293,10 @@ export function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2 pt-2 border-t border-slate-800">
+                  <div className="flex gap-2 pt-2 border-t border-[#262626]">
                     <button
                       onClick={() => copyToClipboard(link.slug)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 rounded-lg transition"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-[#1F1F1F] hover:bg-[#282828] text-xs font-medium text-slate-200 rounded-xl transition"
                     >
                       <Copy className="w-3.5 h-3.5" />
                       {copiedSlug === link.slug ? 'Copiado!' : 'Copiar Link'}
@@ -305,7 +305,7 @@ export function DashboardPage() {
                       href={`/checkout/${link.slug}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 rounded-lg transition"
+                      className="p-2 bg-[#1F1F1F] hover:bg-[#282828] text-slate-300 hover:text-[#958BC2] rounded-xl transition"
                       title="Abrir Checkout"
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -327,7 +327,7 @@ export function DashboardPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-slate-900 border border-slate-800 text-xs text-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500"
+                className="bg-[#141414] border border-[#2E2E2E] text-xs text-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-[#958BC2]"
               >
                 <option value="">Todos os Status</option>
                 <option value="APPROVED">Sucesso (APPROVED)</option>
@@ -339,7 +339,7 @@ export function DashboardPage() {
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="bg-slate-900 border border-slate-800 text-xs text-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500"
+                className="bg-[#141414] border border-[#2E2E2E] text-xs text-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-[#958BC2]"
               >
                 <option value="">Todos os Métodos</option>
                 <option value="PIX">Pix</option>
@@ -347,30 +347,29 @@ export function DashboardPage() {
               </select>
             </div>
           </div>
-
           {/* Transactions Table */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+          <div className="bg-[#141414] border border-[#262626] rounded-2xl overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                <thead className="bg-[#1C1C1C] text-slate-400 uppercase font-semibold border-b border-[#282828]">
                   <tr>
-                    <th className="px-6 py-3.5">Data / Ref</th>
-                    <th className="px-6 py-3.5">Título / Pagador</th>
-                    <th className="px-6 py-3.5">Método</th>
-                    <th className="px-6 py-3.5">Valor Bruto</th>
-                    <th className="px-6 py-3.5">Status</th>
+                    <th className="px-6 py-4">Data / Ref</th>
+                    <th className="px-6 py-4">Título / Pagador</th>
+                    <th className="px-6 py-4">Método</th>
+                    <th className="px-6 py-4">Valor Bruto</th>
+                    <th className="px-6 py-4">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-[#222222] text-slate-300">
                   {transactions.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                      <td colSpan={5} className="px-6 py-10 text-center text-slate-500">
                         Nenhuma transação encontrada com os filtros selecionados.
                       </td>
                     </tr>
                   ) : (
                     transactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-slate-800/40 transition">
+                      <tr key={tx.id} className="hover:bg-[#1A1A1A] transition">
                         <td className="px-6 py-4">
                           <div className="font-mono text-slate-200">{tx.externalReference}</div>
                           <div className="text-[11px] text-slate-500">
@@ -385,11 +384,11 @@ export function DashboardPage() {
                           <div className="flex items-center gap-1.5 font-medium">
                             {tx.paymentMethod === 'PIX' ? (
                               <>
-                                <QrCode className="w-4 h-4 text-emerald-400" /> Pix
+                                <QrCode className="w-4 h-4 text-[#958BC2]" /> Pix
                               </>
                             ) : (
                               <>
-                                <CreditCard className="w-4 h-4 text-sky-400" /> {tx.installments}x Cartão
+                                <CreditCard className="w-4 h-4 text-[#958BC2]" /> {tx.installments}x Cartão
                               </>
                             )}
                           </div>
@@ -410,31 +409,35 @@ export function DashboardPage() {
 
       {/* Modal: Create Link */}
       {isLinkModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold text-white">Criar Link de Checkout</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="bg-[#141414] border border-[#2A2A2A] rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6">
+            <div>
+              <h3 className="text-lg font-bold text-white">Criar Link de Checkout</h3>
+              <p className="text-xs text-slate-400 mt-1">Configure o título e valor para cobrança online</p>
+            </div>
+
             <form onSubmit={handleCreateLink} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Título do Produto / Serviço</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Título do Produto / Serviço</label>
                 <input
                   type="text"
                   required
                   value={newLinkTitle}
                   onChange={(e) => setNewLinkTitle(e.target.value)}
                   placeholder="Ex: Consultoria / Curso Online"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm"
+                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] text-sm transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Valor (R$)</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Valor (R$)</label>
                 <input
                   type="text"
                   required
                   value={newLinkAmount}
                   onChange={(e) => setNewLinkAmount(e.target.value)}
                   placeholder="Ex: 99,90"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono text-sm"
+                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] font-mono text-sm transition"
                 />
               </div>
 
@@ -442,13 +445,13 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setIsLinkModalOpen(false)}
-                  className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition"
+                  className="flex-1 py-3 bg-[#1F1F1F] hover:bg-[#282828] text-slate-300 rounded-xl text-xs font-semibold transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-500/20"
+                  className="flex-1 py-3 bg-[#958BC2] hover:bg-[#7a6fa8] text-white rounded-xl text-xs font-bold transition shadow-lg shadow-[#958BC2]/25"
                 >
                   Gerar Link
                 </button>
@@ -460,35 +463,38 @@ export function DashboardPage() {
 
       {/* Modal: Withdraw */}
       {isWithdrawModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold text-white">Solicitar Saque Pix</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="bg-[#141414] border border-[#2A2A2A] rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6">
+            <div>
+              <h3 className="text-lg font-bold text-white">Solicitar Saque Pix</h3>
+              <p className="text-xs text-slate-400 mt-1">Transfira o saldo disponível direto para sua conta bancária</p>
+            </div>
 
             {withdrawError && (
-              <div className="p-3 bg-rose-500/20 border border-rose-500/40 rounded-xl text-rose-300 text-xs">
+              <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs">
                 {withdrawError}
               </div>
             )}
 
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Valor do Saque (R$)</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Valor do Saque (R$)</label>
                 <input
                   type="text"
                   required
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   placeholder="Ex: 150,00"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono text-sm"
+                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] font-mono text-sm transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Tipo da Chave</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Tipo da Chave</label>
                 <select
                   value={withdrawKeyType}
                   onChange={(e) => setWithdrawKeyType(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm"
+                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] text-sm transition"
                 >
                   <option value="EMAIL">E-mail</option>
                   <option value="CPF">CPF</option>
@@ -499,14 +505,14 @@ export function DashboardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Chave Pix de Destino</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Chave Pix de Destino</label>
                 <input
                   type="text"
                   required
                   value={withdrawPixKey}
                   onChange={(e) => setWithdrawPixKey(e.target.value)}
                   placeholder="sua-chave@pix.com"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm font-mono"
+                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#958BC2] text-sm font-mono transition"
                 />
               </div>
 
@@ -514,13 +520,13 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setIsWithdrawModalOpen(false)}
-                  className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition"
+                  className="flex-1 py-3 bg-[#1F1F1F] hover:bg-[#282828] text-slate-300 rounded-xl text-xs font-semibold transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-500/20"
+                  className="flex-1 py-3 bg-[#958BC2] hover:bg-[#7a6fa8] text-white rounded-xl text-xs font-bold transition shadow-lg shadow-[#958BC2]/25"
                 >
                   Confirmar Saque
                 </button>
