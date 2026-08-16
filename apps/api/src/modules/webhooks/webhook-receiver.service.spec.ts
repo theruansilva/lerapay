@@ -121,7 +121,13 @@ describe('WebhookReceiverService', () => {
     });
     mockEventRepo.findOne.mockResolvedValue(mockExistingEvent);
 
-    const result = await client.recordEvent(payload);
+    const payloadBuffer = Buffer.from(JSON.stringify(payload));
+    const validSignature = crypto
+      .createHmac('sha256', 'my_secret_key')
+      .update(payloadBuffer)
+      .digest('hex');
+
+    const result = await client.recordEvent(payload, payloadBuffer, validSignature);
     expect(result).toEqual(mockExistingEvent);
   });
 

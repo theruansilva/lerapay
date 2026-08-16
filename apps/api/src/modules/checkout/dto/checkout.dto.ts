@@ -34,20 +34,20 @@ export class CreateCheckoutLinkDto {
 }
 
 export class PixPaymentDto {
-  @ApiProperty({ example: 'João da Silva' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: 'João da Silva' })
+  @IsOptional()
   @IsString()
-  payerName: string;
+  payerName?: string;
 
-  @ApiProperty({ example: 'joao@email.com' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: 'joao@email.com' })
+  @IsOptional()
   @IsEmail()
-  payerEmail: string;
+  payerEmail?: string;
 
-  @ApiProperty({ example: '12345678901' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: '12345678901' })
+  @IsOptional()
   @Matches(/^[0-9]{11}$|^[0-9]{14}$/, { message: 'payerDocument must be a valid CPF (11 digits) or CNPJ (14 digits)' })
-  payerDocument: string;
+  payerDocument?: string;
 }
 
 export class CardPaymentDto {
@@ -91,13 +91,13 @@ export class CardPaymentDto {
   @IsString()
   brand?: string;
 
-  @ApiProperty({ example: 'joao@email.com' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: 'joao@email.com' })
+  @IsOptional()
   @IsEmail()
-  payerEmail: string;
+  payerEmail?: string;
 
-  @ApiProperty({ example: '12345678901' })
-  @IsNotEmpty()
+  @ApiPropertyOptional({ example: '12345678901' })
+  @IsOptional()
   @Matches(/^[0-9]{11}$|^[0-9]{14}$/, { message: 'payerDocument must be a valid CPF (11 digits) or CNPJ (14 digits)' })
-  payerDocument: string;
+  payerDocument?: string;
 }
