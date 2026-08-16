@@ -19,3 +19,8 @@
 - **Date**: 2026-08-14
 - **Decision**: Webhook events are captured raw into `webhook_events`, validated via HMAC/signature if present, and processed with database transaction idempotency locks on `externalReference` and `orderId`.
 - **Rationale**: Protects ledger consistency against network retries or out-of-order gateway callbacks.
+
+## AD-005: Playwright E2E Test Suite & Test Automation
+- **Date**: 2026-08-16
+- **Decision**: Adopt Playwright for end-to-end testing with Page Object Model (POM), deterministic webhook HMAC simulator, and dual-mode execution (sandbox + mock).
+- **Rationale**: Guarantees high-confidence testing across NestJS API, React frontend, and payment gateway lifecycle without flaky manual test procedures.
