@@ -1,20 +1,19 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import {
   CheckoutLink,
-  CheckoutLinkStatus,
   Order,
   OrderStatus,
   PaymentMethod,
 } from '../../database/entities';
 import { LeraBoxGatewayClient } from '../gateway/gateway.client';
+import { CheckoutLinkService } from './checkout-link.service';
 import { PixPaymentDto } from './dto/checkout.dto';
 
 @Injectable()
@@ -31,32 +30,8 @@ export class PixPaymentService {
 
   async processPixPayment(slug: string, dto: PixPaymentDto): Promise<Order> {
     return this.linkRepo.manager.transaction(async (transactionalEntityManager) => {
-      const link = await transactionalEntityManager.findOne(CheckoutLink, {
-        where: { slug },
-        lock: { mode: 'pessimistic_write' },
-      });
-      if (!link) {
-        throw new NotFoundException(`Checkout link ${slug} not found`);
-      }
-
-      if (link.status === CheckoutLinkStatus.PAID) {
-        throw new BadRequestException('Checkout link has already been paid');
-      }
-
-      if (link.status === CheckoutLinkStatus.EXPIRED || (link.expiresAt && new Date() > new Date(link.expiresAt))) {
-        link.status = CheckoutLinkStatus.EXPIRED;
-        await transactionalEntityManager.save(link);
-        throw new BadRequestException('Checkout link has expired');
-      }
-
-      const existingPending = await transactionalEntityManager.findOne(Order, {
-        where: { checkoutLinkId: link.id, status: OrderStatus.PENDING },
-      });
-      if (existingPending) {
-        throw new BadRequestException('Payment initiation already in progress for this link');
-      }
-
-      const externalReference = `ord_${uuidv4().replace(/-/g, '')}`;
+      const link = await CheckoutLinkService.validateAndLockLink(transactionalEntityManager, slug);
+      const externalReference = `ord_${randomUUID().replace(/-/g, '')}`;
       this.logger.log(`Processing Pix payment for link ${slug}, externalReference: ${externalReference}`);
 
       const gatewayResponse = await this.gatewayClient.createPixPayment(link.merchantId, {
