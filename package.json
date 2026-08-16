@@ -7,14 +7,14 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "build": "bun --filter '*' build",
+    "test": "bun --filter '*' test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "lint": "npm run lint --workspaces --if-present",
-    "dev": "npm run dev --workspaces --if-present"
+    "lint": "bun --filter '*' lint",
+    "dev": "bun --filter '*' dev"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
