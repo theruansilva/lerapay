@@ -49,7 +49,20 @@ export class CheckoutController {
   @ApiResponse({ status: 200, description: 'Checkout link details' })
   @ApiResponse({ status: 404, description: 'Link not found' })
   async getLinkBySlug(@Param('slug') slug: string) {
-    return this.linkService.findBySlug(slug);
+    const link = await this.linkService.findBySlug(slug);
+    return {
+      id: link.id,
+      slug: link.slug,
+      title: link.title,
+      description: link.description,
+      amountCents: link.amountCents,
+      status: link.status,
+      expiresAt: link.expiresAt,
+      merchant: {
+        id: link.merchant?.id,
+        name: link.merchant?.name,
+      },
+    };
   }
 
   @Post('pay/:slug/pix')
@@ -59,7 +72,18 @@ export class CheckoutController {
     @Param('slug') slug: string,
     @Body() dto: PixPaymentDto,
   ) {
-    return this.pixPaymentService.processPixPayment(slug, dto);
+    const order = await this.pixPaymentService.processPixPayment(slug, dto);
+    return {
+      id: order.id,
+      externalReference: order.externalReference,
+      paymentMethod: order.paymentMethod,
+      amountCents: order.amountCents,
+      status: order.status,
+      pixQrCodeBase64: order.pixQrCodeBase64,
+      pixEmv: order.pixEmv,
+      pixTxid: order.pixTxid,
+      createdAt: order.createdAt,
+    };
   }
 
   @Post('pay/:slug/card')
@@ -69,13 +93,36 @@ export class CheckoutController {
     @Param('slug') slug: string,
     @Body() dto: CardPaymentDto,
   ) {
-    return this.cardPaymentService.processCardPayment(slug, dto);
+    const order = await this.cardPaymentService.processCardPayment(slug, dto);
+    return {
+      id: order.id,
+      externalReference: order.externalReference,
+      paymentMethod: order.paymentMethod,
+      amountCents: order.amountCents,
+      status: order.status,
+      cardBrand: order.cardBrand,
+      cardLast4: order.cardLast4,
+      createdAt: order.createdAt,
+    };
   }
 
   @Get('orders/:externalReference')
   @ApiOperation({ summary: 'Check status of order by externalReference' })
   @ApiResponse({ status: 200, description: 'Current order status' })
   async getOrder(@Param('externalReference') externalReference: string) {
-    return this.pixPaymentService.getOrderByExternalReference(externalReference);
+    const order = await this.pixPaymentService.getOrderByExternalReference(externalReference);
+    return {
+      id: order.id,
+      externalReference: order.externalReference,
+      paymentMethod: order.paymentMethod,
+      amountCents: order.amountCents,
+      status: order.status,
+      pixQrCodeBase64: order.pixQrCodeBase64,
+      pixEmv: order.pixEmv,
+      pixTxid: order.pixTxid,
+      cardBrand: order.cardBrand,
+      cardLast4: order.cardLast4,
+      createdAt: order.createdAt,
+    };
   }
 }

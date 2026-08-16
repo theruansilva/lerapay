@@ -70,7 +70,7 @@ The current BaaS implementation can disclose merchant data, mix tenants, and man
 | --- | --- | --- | --- |
 | TENANT-01 | Tenant-safe financial operations | Security core | Implemented |
 | TENANT-02 | Tenant-safe financial operations | Security core | Implemented |
-| GATEWAY-01 | Safe public checkout | Security core | Pending |
+| GATEWAY-01 | Safe public checkout | Security core | Implemented |
 | GATEWAY-02 | Safe public checkout | Security core | Pending |
 | CHECKOUT-01 | Safe public checkout | Security core | Pending |
 | WEBHOOK-01 | Reliable gateway callbacks | Integration | Pending |

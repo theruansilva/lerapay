@@ -68,7 +68,7 @@
 **Gate**: quick
 **Commit**: `✨ feat(gateway): authenticate per merchant account`
 
-### T4: Return explicit public checkout DTOs
+### [x] T4: Return explicit public checkout DTOs
 **What**: Stop returning TypeORM entities and protect merchant and payer data on public checkout endpoints.
 **Where**: `apps/api/src/modules/checkout/checkout-link.service.ts`
 **Depends on**: T1

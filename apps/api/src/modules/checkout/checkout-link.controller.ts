@@ -43,6 +43,19 @@ export class CheckoutLinkController {
   @ApiResponse({ status: 200, description: 'Checkout link details' })
   @ApiResponse({ status: 404, description: 'Link not found' })
   async getBySlug(@Param('slug') slug: string) {
-    return this.linkService.findBySlug(slug);
+    const link = await this.linkService.findBySlug(slug);
+    return {
+      id: link.id,
+      slug: link.slug,
+      title: link.title,
+      description: link.description,
+      amountCents: link.amountCents,
+      status: link.status,
+      expiresAt: link.expiresAt,
+      merchant: {
+        id: link.merchant?.id,
+        name: link.merchant?.name,
+      },
+    };
   }
 }
