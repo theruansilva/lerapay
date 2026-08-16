@@ -58,17 +58,19 @@ graph TD
 ### Opção 1: Via Docker Compose (Recomendado)
 
 1. Clone o repositório:
+
 ```bash
-git clone https://github.com/SEU_USUARIO/nest.git
-cd nest
+git clone https://github.com/theruansilva/lerapay.git && cd lerapay
 ```
 
 2. Configure as variáveis de ambiente com as credenciais reais da sua conta no gateway Lera Box (não há fallback de simulação local):
+
 ```bash
 cp .env.example .env
 ```
 
 3. Inicie os containers:
+
 ```bash
 docker compose up --build -d
 ```
@@ -82,27 +84,31 @@ docker compose up --build -d
 
 ### Opção 2: Execução Local (Desenvolvimento)
 
-1. Instale as dependências com `bun` ou `npm`:
+1. Instale as dependências com `npm`:
+
 ```bash
-bun install # ou npm install
+npm install # ou npm install
 ```
 
 2. Inicie o Backend:
+
 ```bash
 cd apps/api
-bun run start:dev
+npm run start:dev
 ```
 
 3. Inicie o Frontend:
+
 ```bash
 cd apps/web
-bun run dev
+npm run dev
 ```
 
 4. Execute a suíte de testes automatizados:
+
 ```bash
 cd apps/api
-bun run test
+npm run test
 ```
 
 ---
@@ -110,9 +116,10 @@ bun run test
 ## 🔐 Credenciais de Demonstração
 
 Para acessar o Dashboard do Lojista:
+
 - **E-mail**: `demo@lerapay.com`
 - **Senha**: `123456`
-*(Ou cadastre uma nova conta diretamente na tela de login).*
+  _(Ou cadastre uma nova conta diretamente na tela de login)._
 
 ---
 
@@ -123,19 +130,19 @@ Acesse a documentação interativa completa em:
 
 - `POST /api/auth/register` & `POST /api/auth/login`: Autenticação do lojista.
 - `POST /api/auth/gateway/register`: Cadastra nova conta no gateway Lera Box (`POST /users`) — envia credenciais por e-mail.
-- `POST /api/auth/gateway/link` *(Bearer)*: Vincula documento + senha do gateway ao merchant, autentica e persiste token.
-- `GET /api/auth/me` *(Bearer)*: Perfil do lojista com `gatewayClientCode` e `gatewayStoreKey`.
+- `POST /api/auth/gateway/link` _(Bearer)_: Vincula documento + senha do gateway ao merchant, autentica e persiste token.
+- `GET /api/auth/me` _(Bearer)_: Perfil do lojista com `gatewayClientCode` e `gatewayStoreKey`.
 - `GET /api/fees` & `GET /api/fees/calculate`: Consulta de taxas e cálculo dinâmico de parcelas.
-- `POST /api/checkout/links` *(Bearer)*: Criação de links de checkout com slug único e valor em centavos.
+- `POST /api/checkout/links` _(Bearer)_: Criação de links de checkout com slug único e valor em centavos.
 - `GET /api/checkout/links/:slug`: Consulta pública do link para o checkout.
 - `POST /api/checkout/pay/:slug/pix`: Geração de QR Code e EMV Pix.
 - `POST /api/checkout/pay/:slug/card`: Processamento de pagamento via Cartão com validação de taxas.
-- `GET /api/wallet` *(Bearer)*: Saldo disponível na carteira sincronizado com o gateway.
-- `GET /api/wallet/transactions` *(Bearer)*: Extrato financeiro com filtros por status (`APPROVED`, `DENIED`, `EXPIRED`, `CANCELLED`).
-- `POST /api/wallet/withdrawals` *(Bearer)*: Solicitação de saque Pix.
-- `GET /api/wallet/withdrawals/:id` *(Bearer)*: Status de saque específico.
+- `GET /api/wallet` _(Bearer)_: Saldo disponível na carteira sincronizado com o gateway.
+- `GET /api/wallet/transactions` _(Bearer)_: Extrato financeiro com filtros por status (`APPROVED`, `DENIED`, `EXPIRED`, `CANCELLED`).
+- `POST /api/wallet/withdrawals` _(Bearer)_: Solicitação de saque Pix.
+- `GET /api/wallet/withdrawals/:id` _(Bearer)_: Status de saque específico.
 - `POST /api/webhooks`: Endpoint receptor de callbacks com validação `X-Lera-Box-Signature` e idempotência.
-- `POST /api/webhooks/setup` *(Bearer)*: Cadastra os 3 callbacks obrigatórios no gateway (também disponível na UI do Dashboard).
+- `POST /api/webhooks/setup` _(Bearer)_: Cadastra os 3 callbacks obrigatórios no gateway (também disponível na UI do Dashboard).
 
 ---
 
@@ -153,18 +160,22 @@ Acesse a documentação interativa completa em:
 A aplicação BaaS suporta o recebimento e processamento assíncrono de eventos do gateway para atualizar o status de pagamentos Pix, pagamentos por cartão de crédito e solicitações de saque.
 
 ### 1. Configurando a Assinatura (HMAC)
+
 No seu painel do lojista no gateway Lera Box, configure a chave secreta de webhook. No arquivo `.env` da aplicação BaaS, defina a variável `GATEWAY_WEBHOOK_SECRET` com o mesmo valor configurado no painel. O cabeçalho `x-lera-box-signature` será validado contra os bytes brutos do corpo da requisição (raw body).
 
 ### 2. Cadastro Automatizado dos Callbacks
+
 Você deve registrar a URL pública da sua API BaaS para receber os eventos do gateway. Para facilitar, a API expõe uma rota autenticada que cadastra os três tipos obrigatórios de eventos (`PAYMENT_PIX`, `PAYMENT_CARD` e `WITHDRAWAL`) de uma vez no gateway:
 
-* **Método**: `POST`
-* **Rota**: `/api/webhooks/setup`
-* **Headers**: `Authorization: Bearer <seu_token_jwt>`
-* **Corpo (JSON)**:
+- **Método**: `POST`
+- **Rota**: `/api/webhooks/setup`
+- **Headers**: `Authorization: Bearer <seu_token_jwt>`
+- **Corpo (JSON)**:
+
 ```json
 {
   "url": "https://sua-api.seudominio.com/api/webhooks"
 }
 ```
+
 Isso fará o cadastro das três rotas de callback de forma automatizada no gateway sob as credenciais do merchant autenticado.
