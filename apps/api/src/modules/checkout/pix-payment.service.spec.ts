@@ -62,6 +62,7 @@ describe('PixPaymentService', () => {
       slug: 'chk_pix',
       amountCents: 5000,
       status: CheckoutLinkStatus.ACTIVE,
+      merchantId: 'm1',
     });
 
     const order = await service.processPixPayment('chk_pix', {
@@ -82,6 +83,7 @@ describe('PixPaymentService', () => {
       slug: 'chk_paid',
       amountCents: 5000,
       status: CheckoutLinkStatus.PAID,
+      merchantId: 'm1',
     });
 
     await expect(

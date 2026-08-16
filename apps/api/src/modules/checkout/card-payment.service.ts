@@ -62,41 +62,31 @@ export class CardPaymentService {
       `Processing Card payment for link ${slug}, externalReference: ${externalReference}, installments: ${dto.installments}, feePercent: ${verifiedFeePercent}%`,
     );
 
-    let gatewayPaymentId: string | undefined;
+    const gatewayResponse = await this.gatewayClient.createCardPayment(link.merchantId, {
+      amount: link.amountCents,
+      externalReference,
+      cardNumber: dto.cardNumber,
+      cardHolderName: dto.cardHolderName,
+      cardExpirationMonth: dto.cardExpirationMonth,
+      cardExpirationYear: dto.cardExpirationYear,
+      cardCvv: dto.cardCvv,
+      installments: dto.installments,
+      feePercent: verifiedFeePercent,
+      brand,
+    });
+
+    const gatewayPaymentId = gatewayResponse.id;
     let orderStatus: OrderStatus = OrderStatus.PENDING;
-
-    try {
-      const gatewayResponse = await this.gatewayClient.createCardPayment({
-        amount: link.amountCents,
-        externalReference,
-        cardNumber: dto.cardNumber,
-        cardHolderName: dto.cardHolderName,
-        cardExpirationMonth: dto.cardExpirationMonth,
-        cardExpirationYear: dto.cardExpirationYear,
-        cardCvv: dto.cardCvv,
-        installments: dto.installments,
-        feePercent: verifiedFeePercent,
-        brand,
-      });
-
-      gatewayPaymentId = gatewayResponse.id;
-      if (gatewayResponse.status === 'APPROVED') {
-        orderStatus = OrderStatus.APPROVED;
-        link.status = CheckoutLinkStatus.PAID;
-        await this.linkRepo.save(link);
-      } else if (gatewayResponse.status === 'DENIED') {
-        orderStatus = OrderStatus.DENIED;
-      }
-    } catch (error) {
-      this.logger.warn(`Gateway live Card call failed or running in simulation fallback: ${error}`);
-      // In simulation mode, randomly approve for testing or mark pending
+    if (gatewayResponse.status === 'APPROVED') {
       orderStatus = OrderStatus.APPROVED;
       link.status = CheckoutLinkStatus.PAID;
       await this.linkRepo.save(link);
-      gatewayPaymentId = `gw_card_${Date.now()}`;
+    } else if (gatewayResponse.status === 'DENIED') {
+      orderStatus = OrderStatus.DENIED;
     }
 
     const order = this.orderRepo.create({
+      merchantId: link.merchantId,
       externalReference,
       gatewayPaymentId,
       paymentMethod: PaymentMethod.CARD,
@@ -111,7 +101,6 @@ export class CardPaymentService {
       payerDocument: dto.payerDocument,
       checkoutLinkId: link.id,
     });
-
     return this.orderRepo.save(order);
   }
 }

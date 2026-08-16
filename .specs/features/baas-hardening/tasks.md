@@ -80,7 +80,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(checkout): hide merchant and payer data`
 
-### T5: Remove financial simulation fallbacks
+### [x] T5: Remove financial simulation fallbacks
 **What**: Propagate gateway authentication, fee, Pix, card, and withdrawal failures without manufactured success data.
 **Where**: `apps/api/src/modules/gateway/gateway.client.ts`
 **Depends on**: T2, T3

@@ -71,6 +71,7 @@ describe('CardPaymentService', () => {
       slug: 'chk_card',
       amountCents: 10000,
       status: CheckoutLinkStatus.ACTIVE,
+      merchantId: 'm1',
     });
 
     const order = await service.processCardPayment('chk_card', {
@@ -97,6 +98,7 @@ describe('CardPaymentService', () => {
       slug: 'chk_card',
       amountCents: 10000,
       status: CheckoutLinkStatus.ACTIVE,
+      merchantId: 'm1',
     });
 
     mockFeesService.validateInstallmentFee.mockRejectedValue(

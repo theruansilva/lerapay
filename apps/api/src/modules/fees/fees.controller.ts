@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Query, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { FeesService } from './fees.service';
 import { LeraBoxGatewayClient } from '../gateway/gateway.client';
 
@@ -32,11 +33,13 @@ export class FeesController {
   }
 
   @Get('status')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Check connection and profile status on Lera Box Gateway' })
   @ApiResponse({ status: 200, description: 'Gateway connection profile' })
-  async getGatewayStatus() {
+  async getGatewayStatus(@Request() req: any) {
     try {
-      const profile = await this.gatewayClient.getProfile();
+      const profile = await this.gatewayClient.getProfile(req.user.id);
       return {
         connected: true,
         profile,

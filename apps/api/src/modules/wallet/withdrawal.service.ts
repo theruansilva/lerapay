@@ -32,24 +32,14 @@ export class WithdrawalService {
 
     this.logger.log(`Requesting withdrawal of ${dto.amountCents} cents to ${dto.pixKey} for merchant ${merchantId}`);
 
-    let gatewayWithdrawalId: string | undefined;
-    let status: WithdrawalStatus = WithdrawalStatus.PENDING;
+    const response = await this.gatewayClient.requestWithdrawal(merchantId, {
+      amount: dto.amountCents,
+      pixKey: dto.pixKey,
+      pixKeyType: dto.pixKeyType,
+    });
 
-    try {
-      const response = await this.gatewayClient.requestWithdrawal(merchantId, {
-        amount: dto.amountCents,
-        pixKey: dto.pixKey,
-        pixKeyType: dto.pixKeyType,
-      });
-
-      gatewayWithdrawalId = response.id;
-      status = (response.status as WithdrawalStatus) || WithdrawalStatus.PENDING;
-    } catch (error) {
-      this.logger.warn(`Gateway live withdrawal failed or running in simulation fallback: ${error}`);
-      gatewayWithdrawalId = `wth_sim_${Date.now()}`;
-      status = WithdrawalStatus.APPROVED;
-    }
-
+    gatewayWithdrawalId = response.id;
+    status = (response.status as WithdrawalStatus) || WithdrawalStatus.PENDING;
     const withdrawal = this.withdrawalRepo.create({
       merchantId,
       amountCents: dto.amountCents,

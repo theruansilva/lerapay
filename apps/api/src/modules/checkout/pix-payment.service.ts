@@ -27,7 +27,7 @@ export class PixPaymentService {
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
     private readonly gatewayClient: LeraBoxGatewayClient,
-  ) {}
+  ) { }
 
   async processPixPayment(slug: string, dto: PixPaymentDto): Promise<Order> {
     const link = await this.linkRepo.findOne({ where: { slug } });
@@ -49,35 +49,21 @@ export class PixPaymentService {
 
     this.logger.log(`Processing Pix payment for link ${slug}, externalReference: ${externalReference}`);
 
-    let qrCodeBase64: string | undefined;
-    let emv: string | undefined;
-    let gatewayPaymentId: string | undefined;
-    let txid: string | undefined;
+    const gatewayResponse = await this.gatewayClient.createPixPayment(link.merchantId, {
+      amount: link.amountCents,
+      externalReference,
+      payerDocument: dto.payerDocument || '51145071848',
+      description: link.description || `Pagamento link ${link.slug}`,
+    });
 
-    try {
-      const gatewayResponse = await this.gatewayClient.createPixPayment({
-        amount: link.amountCents,
-        externalReference,
-        payerName: dto.payerName,
-        payerEmail: dto.payerEmail,
-        payerDocument: dto.payerDocument,
-      });
-
-      gatewayPaymentId = gatewayResponse.id;
-      qrCodeBase64 = gatewayResponse.qrCodeBase64;
-      emv = gatewayResponse.emv;
-      txid = gatewayResponse.txid;
-    } catch (error) {
-      this.logger.warn(`Gateway live Pix call failed or returned simulated mode: ${error}`);
-      // Simulated Pix EMV / QR fallback for sandbox evaluation
-      txid = `tx_${Date.now()}`;
-      emv = `00020126580014br.gov.bcb.pix0136lerapay-sandbox-${externalReference}520400005303986540${(link.amountCents / 100).toFixed(2)}5802BR5913Lera Pay BaaS6009Sao Paulo62070503***6304`;
-      qrCodeBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-    }
+    const qrCodeBase64 = gatewayResponse.metadata?.qrCodeBase64 || gatewayResponse.qrCodeBase64;
+    const emv = gatewayResponse.metadata?.emv || gatewayResponse.emv;
+    const txid = gatewayResponse.metadata?.txid || gatewayResponse.txid || gatewayResponse.id;
 
     const order = this.orderRepo.create({
+      merchantId: link.merchantId,
       externalReference,
-      gatewayPaymentId,
+      gatewayPaymentId: gatewayResponse.id,
       paymentMethod: PaymentMethod.PIX,
       amountCents: link.amountCents,
       feePercent: 0,
@@ -91,7 +77,6 @@ export class PixPaymentService {
       payerDocument: dto.payerDocument,
       checkoutLinkId: link.id,
     });
-
     return this.orderRepo.save(order);
   }
 
