@@ -25,7 +25,7 @@ export class WebhookProcessorService {
     @InjectRepository(Withdrawal)
     private readonly withdrawalRepo: Repository<Withdrawal>,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async processEvent(event: WebhookEvent): Promise<boolean> {
     if (event.processed) {
@@ -42,47 +42,60 @@ export class WebhookProcessorService {
       const eventType = event.eventType;
       const data = payload?.data || {};
       const externalReference = data.externalReference || event.externalReference;
-      const status = data.status;
+      const slug = data.slug || payload?.slug;
+      const status = data.status || payload?.status;
 
-      this.logger.log(`Processing event ${event.id} of type ${eventType} for ref ${externalReference}`);
+      this.logger.log(`Processing event ${event.id} of type ${eventType} for ref ${externalReference || slug}`);
 
       if (eventType === 'PAYMENT_PIX' || eventType === 'PAYMENT_CARD') {
-        if (externalReference) {
-          const order = await queryRunner.manager.findOne(Order, {
+        let order = externalReference
+          ? await queryRunner.manager.findOne(Order, {
             where: { externalReference },
             relations: ['checkoutLink'],
+          })
+          : null;
+
+        if (!order && slug) {
+          const link = await queryRunner.manager.findOne(CheckoutLink, {
+            where: { slug },
           });
+          if (link) {
+            order = await queryRunner.manager.findOne(Order, {
+              where: { checkoutLinkId: link.id },
+              order: { createdAt: 'DESC' },
+              relations: ['checkoutLink'],
+            });
+          }
+        }
+        if (order) {
+          const isTerminal = [
+            OrderStatus.APPROVED,
+            OrderStatus.DENIED,
+            OrderStatus.EXPIRED,
+            OrderStatus.CANCELLED,
+          ].includes(order.status as OrderStatus);
 
-          if (order) {
-            const isTerminal = [
-              OrderStatus.APPROVED,
-              OrderStatus.DENIED,
-              OrderStatus.EXPIRED,
-              OrderStatus.CANCELLED,
-            ].includes(order.status as OrderStatus);
-
-            if (!isTerminal) {
-              if (status === 'APPROVED') {
-                order.status = OrderStatus.APPROVED;
-                if (order.checkoutLink) {
-                  order.checkoutLink.status = CheckoutLinkStatus.PAID;
-                  await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
-                }
-              } else if (status === 'DENIED') {
-                order.status = OrderStatus.DENIED;
-              } else if (status === 'EXPIRED') {
-                order.status = OrderStatus.EXPIRED;
-              } else if (status === 'CANCELLED') {
-                order.status = OrderStatus.CANCELLED;
-                if (order.checkoutLink) {
-                  order.checkoutLink.status = CheckoutLinkStatus.CANCELLED;
-                  await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
-                }
+          if (!isTerminal) {
+            if (status === 'APPROVED') {
+              order.status = OrderStatus.APPROVED;
+              if (order.checkoutLink) {
+                order.checkoutLink.status = CheckoutLinkStatus.PAID;
+                await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
               }
-              await queryRunner.manager.save(Order, order);
-            } else {
-              this.logger.warn(`Order ${order.id} is already in terminal state ${order.status}. Ignoring late status update to ${status}.`);
+            } else if (status === 'DENIED') {
+              order.status = OrderStatus.DENIED;
+            } else if (status === 'EXPIRED') {
+              order.status = OrderStatus.EXPIRED;
+            } else if (status === 'CANCELLED') {
+              order.status = OrderStatus.CANCELLED;
+              if (order.checkoutLink) {
+                order.checkoutLink.status = CheckoutLinkStatus.CANCELLED;
+                await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
+              }
             }
+            await queryRunner.manager.save(Order, order);
+          } else {
+            this.logger.warn(`Order ${order.id} is already in terminal state ${order.status}. Ignoring late status update to ${status}.`);
           }
         }
       } else if (eventType === 'WITHDRAWAL') {

@@ -23,7 +23,7 @@ export class WebhooksController {
   constructor(
     private readonly receiverService: WebhookReceiverService,
     private readonly processorService: WebhookProcessorService,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.OK)
@@ -42,7 +42,7 @@ export class WebhooksController {
     const rawBody = req.rawBody;
     const event = await this.receiverService.recordEvent(payload, rawBody, signature);
     await this.processorService.processEvent(event);
-    return { status: 'acknowledged', eventId: event.id };
+    return { status: 'acknowledged', success: true, eventId: event.id };
   }
 
   @Post('setup')
