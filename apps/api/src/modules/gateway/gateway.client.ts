@@ -61,12 +61,19 @@ export class LeraBoxGatewayClient {
       throw new HttpException('Merchant not found', HttpStatus.BAD_GATEWAY);
     }
 
-    const document = user.document;
-    const password = user.gatewayPassword;
+    const document =
+      user.document ||
+      this.config.get<string>('GATEWAY_DOCUMENT');
+    const password =
+      user.gatewayPassword ||
+      this.config.get<string>('GATEWAY_PASSWORD');
     const identifier = document;
 
     if (!identifier || !password) {
-      throw new HttpException('Gateway credentials not configured for merchant', HttpStatus.BAD_GATEWAY);
+      throw new HttpException(
+        'Gateway credentials not configured for merchant (configure GATEWAY_DOCUMENT / GATEWAY_PASSWORD in .env or via /api/auth/gateway/link)',
+        HttpStatus.BAD_GATEWAY,
+      );
     }
 
     try {

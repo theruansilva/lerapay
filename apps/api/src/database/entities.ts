@@ -36,7 +36,7 @@ export class User {
   @Column({ nullable: true })
   gatewayPassword: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   gatewayToken: string;
 
   @Column({ type: 'bigint', nullable: true })
