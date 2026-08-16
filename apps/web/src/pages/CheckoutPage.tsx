@@ -104,8 +104,12 @@ export function CheckoutPage() {
         });
         setInstallmentPlans(feesRes.data);
       } catch (err: unknown) {
-        const errorObj = err as { response?: { data?: { message?: string } } };
-        setError(errorObj.response?.data?.message || 'Link de pagamento inválido ou expirado');
+        const errorObj = err as { response?: { status?: number; data?: { message?: string } } };
+        if (errorObj.response?.status === 404) {
+          setError('Link de pagamento não encontrado ou expirado');
+        } else {
+          setError(errorObj.response?.data?.message || 'Link de pagamento inválido ou expirado');
+        }
       } finally {
         setLoading(false);
       }
@@ -131,7 +135,7 @@ export function CheckoutPage() {
       } catch (e) {
         // Ignore polling error
       }
-    }, 3000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [activeOrder]);
@@ -271,26 +275,34 @@ export function CheckoutPage() {
     );
   }
 
-  // Printable Receipt View when approved
-  if (activeOrder && activeOrder.status === 'APPROVED') {
+  // Printable Receipt / Status View when finalized
+  if (activeOrder && (activeOrder.status === 'APPROVED' || activeOrder.status === 'DENIED')) {
+    const isApproved = activeOrder.status === 'APPROVED';
     return (
       <div className="min-h-screen bg-slate-950 py-12 px-4 flex items-center justify-center">
         <div className="bg-white text-slate-900 rounded-3xl max-w-lg w-full p-8 shadow-2xl space-y-6 print:m-0 print:p-0 print:shadow-none">
           <div className="text-center space-y-2 border-b border-slate-100 pb-6">
-            <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-2">
-              <CheckCircle2 className="w-10 h-10" />
+            <div
+              className={`h-16 w-16 ${isApproved ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'
+                } rounded-full flex items-center justify-center mx-auto mb-2`}
+            >
+              {isApproved ? <CheckCircle2 className="w-10 h-10" /> : <XCircle className="w-10 h-10" />}
             </div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900">Comprovante de Pagamento</h2>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900">
+              {isApproved ? 'Comprovante de Pagamento' : 'Pagamento Recusado'}
+            </h2>
             <p className="text-xs text-slate-500 font-medium">Lera Pay Banking as a Service</p>
           </div>
 
           <div className="space-y-3 text-sm">
             <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-slate-500">Status</span>
-              <span className="font-bold text-emerald-600">PAGAMENTO APROVADO</span>
+              <span className={`font-bold ${isApproved ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {isApproved ? 'PAGAMENTO APROVADO' : 'PAGAMENTO RECUSADO'}
+              </span>
             </div>
             <div className="flex justify-between py-2 border-b border-slate-100">
-              <span className="text-slate-500">Valor Pago</span>
+              <span className="text-slate-500">Valor</span>
               <span className="font-bold text-slate-900 font-mono text-lg">
                 {((activeOrder.amountCents || link?.amountCents || 0) / 100).toLocaleString('pt-BR', {
                   style: 'currency',
@@ -300,7 +312,9 @@ export function CheckoutPage() {
             </div>
             <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-slate-500">Método</span>
-              <span className="font-semibold">{activeOrder.paymentMethod === 'PIX' ? 'Pix Instantâneo' : `${activeOrder.installments}x no Cartão`}</span>
+              <span className="font-semibold">
+                {activeOrder.paymentMethod === 'PIX' ? 'Pix Instantâneo' : `${activeOrder.installments}x no Cartão`}
+              </span>
             </div>
             <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-slate-500">Produto / Serviço</span>
@@ -317,12 +331,21 @@ export function CheckoutPage() {
           </div>
 
           <div className="pt-4 flex gap-3 print:hidden">
-            <button
-              onClick={() => window.print()}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-sm transition"
-            >
-              <Printer className="w-4 h-4" /> Imprimir Comprovante
-            </button>
+            {isApproved ? (
+              <button
+                onClick={() => window.print()}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-sm transition"
+              >
+                <Printer className="w-4 h-4" /> Imprimir Comprovante
+              </button>
+            ) : (
+              <button
+                onClick={() => setActiveOrder(null)}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-sm transition"
+              >
+                Tentar Novamente
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -474,10 +497,17 @@ export function CheckoutPage() {
                     <p className="text-sm font-bold text-white">Escaneie o QR Code no app do seu banco</p>
                     <p className="text-xs text-slate-400">Ou utilize a opção Pix Copia e Cola abaixo</p>
                   </div>
-
                   {activeOrder.pixEmv && (
                     <div className="space-y-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={activeOrder.pixEmv}
+                        className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-2.5 text-slate-300 text-xs font-mono text-center focus:outline-none select-all"
+                        title="Código Pix Copia e Cola"
+                      />
                       <button
+                        type="button"
                         onClick={copyEmvToClipboard}
                         className="w-full flex items-center justify-center gap-2 py-3 bg-brand-surface-input hover:bg-brand-border text-brand-primary font-bold text-xs rounded-xl border border-brand-border-input transition"
                       >
