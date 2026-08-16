@@ -30,61 +30,43 @@ export class AuthService implements OnModuleInit {
   }
 
   private async seedDemoUsers() {
-    const defaultDoc = this.config.get<string>('GATEWAY_DOCUMENT', '51145071848');
-    const defaultPass = this.config.get<string>('GATEWAY_PASSWORD', 'wg6g@ju6Lr');
-    const defaultClientCode = this.config.get<string>('GATEWAY_CLIENT_CODE', '162904');
-    const defaultStoreKey = this.config.get<string>('GATEWAY_STORE_KEY', '46a93d0406072fa9182c43cf828459dd');
+    const defaultCredentials = {
+      document: this.config.get<string>('GATEWAY_DOCUMENT', '51145071848'),
+      gatewayPassword: this.config.get<string>('GATEWAY_PASSWORD', 'wg6g@ju6Lr'),
+      gatewayClientCode: this.config.get<string>('GATEWAY_CLIENT_CODE', '162904'),
+      gatewayStoreKey: this.config.get<string>('GATEWAY_STORE_KEY', '46a93d0406072fa9182c43cf828459dd'),
+    };
 
-    const demoEmails = [
-      'merchant@lerapay.com',
-      'demo@lerapay.com',
-      'merchant@lorepay.com',
+    const demoUsers = [
+      { email: 'merchant@lerapay.com', name: 'Lojista Lera Pay' },
+      { email: 'demo@lerapay.com', name: 'Demonstração Lera Pay' },
+      { email: 'merchant@lorepay.com', name: 'Lojista Lera Pay' },
     ];
 
-    const salt = await bcrypt.genSalt(10);
-    const defaultPasswordHash = await bcrypt.hash('123456', salt);
+    const defaultPasswordHash = await bcrypt.hash('123456', 10);
 
-    for (const email of demoEmails) {
+    for (const demo of demoUsers) {
       try {
-        let user = await this.userRepository.findOne({ where: { email } });
+        const user = await this.userRepository.findOne({ where: { email: demo.email } });
         if (!user) {
-          user = this.userRepository.create({
-            email,
-            name: email.includes('demo') ? 'Demonstração Lera Pay' : 'Lojista Lera Pay',
+          const newUser = this.userRepository.create({
+            ...demo,
             passwordHash: defaultPasswordHash,
-            document: defaultDoc,
-            gatewayPassword: defaultPass,
-            gatewayClientCode: defaultClientCode,
-            gatewayStoreKey: defaultStoreKey,
+            ...defaultCredentials,
+          });
+          await this.userRepository.save(newUser);
+          this.logger.log(`Created demo user: ${demo.email}`);
+        } else {
+          Object.assign(user, {
+            document: user.document || defaultCredentials.document,
+            gatewayPassword: user.gatewayPassword || defaultCredentials.gatewayPassword,
+            gatewayClientCode: user.gatewayClientCode || defaultCredentials.gatewayClientCode,
+            gatewayStoreKey: user.gatewayStoreKey || defaultCredentials.gatewayStoreKey,
           });
           await this.userRepository.save(user);
-          this.logger.log(`Created demo user: ${email}`);
-        } else {
-          // Ensure gateway credentials and password hash are active
-          let updated = false;
-          if (!user.document && defaultDoc) {
-            user.document = defaultDoc;
-            updated = true;
-          }
-          if (!user.gatewayPassword && defaultPass) {
-            user.gatewayPassword = defaultPass;
-            updated = true;
-          }
-          if (!user.gatewayClientCode && defaultClientCode) {
-            user.gatewayClientCode = defaultClientCode;
-            updated = true;
-          }
-          if (!user.gatewayStoreKey && defaultStoreKey) {
-            user.gatewayStoreKey = defaultStoreKey;
-            updated = true;
-          }
-          if (updated) {
-            await this.userRepository.save(user);
-            this.logger.log(`Updated demo user credentials: ${email}`);
-          }
         }
       } catch (err) {
-        this.logger.warn(`Failed to seed demo user ${email}: ${err}`);
+        this.logger.warn(`Failed to seed demo user ${demo.email}: ${err}`);
       }
     }
   }
