@@ -14,6 +14,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { WebhookReceiverService, WebhookPayload } from './webhook-receiver.service';
 import { WebhookProcessorService } from './webhook-processor.service';
 
+interface RequestWithRawBody extends Request {
+  rawBody?: Buffer;
+}
 @ApiTags('Webhooks')
 @Controller('api/webhooks')
 export class WebhooksController {
@@ -33,7 +36,7 @@ export class WebhooksController {
   @ApiResponse({ status: 200, description: 'Webhook acknowledged and processed' })
   async handleWebhook(
     @Body() payload: WebhookPayload,
-    @Req() req: Request,
+    @Req() req: RequestWithRawBody,
     @Headers('x-lera-box-signature') signature?: string,
   ) {
     const rawBody = req.rawBody;
