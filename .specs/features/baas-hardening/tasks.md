@@ -92,7 +92,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(gateway): fail safely on upstream errors`
 
-### T6: Lock checkout payment initiation
+### [x] T6: Lock checkout payment initiation
 **What**: Prevent concurrent payment attempts from charging one checkout link twice and persist merchant ownership on orders.
 **Where**: `apps/api/src/modules/checkout/pix-payment.service.ts`
 **Depends on**: T2, T5

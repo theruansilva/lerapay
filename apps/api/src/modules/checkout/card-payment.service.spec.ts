@@ -17,6 +17,9 @@ describe('CardPaymentService', () => {
     mockLinkRepo = {
       findOne: jest.fn(),
       save: jest.fn(),
+      manager: {
+        transaction: jest.fn(),
+      },
     };
 
     mockOrderRepo = {
@@ -24,6 +27,27 @@ describe('CardPaymentService', () => {
       save: jest.fn().mockImplementation((order) => Promise.resolve(order)),
       findOne: jest.fn(),
     };
+
+    const mockEntityManager = {
+      findOne: jest.fn().mockImplementation((entity, criteria) => {
+        if (entity === CheckoutLink) {
+          return mockLinkRepo.findOne(criteria);
+        }
+        if (entity === Order) {
+          return mockOrderRepo.findOne(criteria);
+        }
+        return null;
+      }),
+      save: jest.fn().mockImplementation((entity, val) => {
+        if (entity === CheckoutLink) {
+          return mockLinkRepo.save(val);
+        }
+        return mockOrderRepo.save(val);
+      }),
+      create: jest.fn().mockImplementation((entity, dto) => mockOrderRepo.create(dto)),
+    };
+
+    mockLinkRepo.manager.transaction.mockImplementation((cb) => cb(mockEntityManager));
 
     mockGatewayClient = {
       createCardPayment: jest.fn().mockResolvedValue({

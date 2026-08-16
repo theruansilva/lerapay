@@ -30,54 +30,66 @@ export class PixPaymentService {
   ) { }
 
   async processPixPayment(slug: string, dto: PixPaymentDto): Promise<Order> {
-    const link = await this.linkRepo.findOne({ where: { slug } });
-    if (!link) {
-      throw new NotFoundException(`Checkout link ${slug} not found`);
-    }
+    return this.linkRepo.manager.transaction(async (transactionalEntityManager) => {
+      const link = await transactionalEntityManager.findOne(CheckoutLink, {
+        where: { slug },
+        lock: { mode: 'pessimistic_write' },
+      });
+      if (!link) {
+        throw new NotFoundException(`Checkout link ${slug} not found`);
+      }
 
-    if (link.status === CheckoutLinkStatus.PAID) {
-      throw new BadRequestException('Checkout link has already been paid');
-    }
+      if (link.status === CheckoutLinkStatus.PAID) {
+        throw new BadRequestException('Checkout link has already been paid');
+      }
 
-    if (link.status === CheckoutLinkStatus.EXPIRED || (link.expiresAt && new Date() > new Date(link.expiresAt))) {
-      link.status = CheckoutLinkStatus.EXPIRED;
-      await this.linkRepo.save(link);
-      throw new BadRequestException('Checkout link has expired');
-    }
+      if (link.status === CheckoutLinkStatus.EXPIRED || (link.expiresAt && new Date() > new Date(link.expiresAt))) {
+        link.status = CheckoutLinkStatus.EXPIRED;
+        await transactionalEntityManager.save(link);
+        throw new BadRequestException('Checkout link has expired');
+      }
 
-    const externalReference = `ord_${uuidv4().replace(/-/g, '')}`;
+      const existingPending = await transactionalEntityManager.findOne(Order, {
+        where: { checkoutLinkId: link.id, status: OrderStatus.PENDING },
+      });
+      if (existingPending) {
+        throw new BadRequestException('Payment initiation already in progress for this link');
+      }
 
-    this.logger.log(`Processing Pix payment for link ${slug}, externalReference: ${externalReference}`);
+      const externalReference = `ord_${uuidv4().replace(/-/g, '')}`;
+      this.logger.log(`Processing Pix payment for link ${slug}, externalReference: ${externalReference}`);
 
-    const gatewayResponse = await this.gatewayClient.createPixPayment(link.merchantId, {
-      amount: link.amountCents,
-      externalReference,
-      payerDocument: dto.payerDocument || '51145071848',
-      description: link.description || `Pagamento link ${link.slug}`,
+      const gatewayResponse = await this.gatewayClient.createPixPayment(link.merchantId, {
+        amount: link.amountCents,
+        externalReference,
+        payerDocument: dto.payerDocument || '51145071848',
+        description: link.description || `Pagamento link ${link.slug}`,
+      });
+
+      const qrCodeBase64 = gatewayResponse.metadata?.qrCodeBase64 || gatewayResponse.qrCodeBase64;
+      const emv = gatewayResponse.metadata?.emv || gatewayResponse.emv;
+      const txid = gatewayResponse.metadata?.txid || gatewayResponse.txid || gatewayResponse.id;
+
+      const order = transactionalEntityManager.create(Order, {
+        merchantId: link.merchantId,
+        externalReference,
+        gatewayPaymentId: gatewayResponse.id,
+        paymentMethod: PaymentMethod.PIX,
+        amountCents: link.amountCents,
+        feePercent: 0,
+        installments: 1,
+        status: OrderStatus.PENDING,
+        pixQrCodeBase64: qrCodeBase64,
+        pixEmv: emv,
+        pixTxid: txid,
+        payerName: dto.payerName,
+        payerEmail: dto.payerEmail,
+        payerDocument: dto.payerDocument,
+        checkoutLinkId: link.id,
+      });
+
+      return transactionalEntityManager.save(Order, order);
     });
-
-    const qrCodeBase64 = gatewayResponse.metadata?.qrCodeBase64 || gatewayResponse.qrCodeBase64;
-    const emv = gatewayResponse.metadata?.emv || gatewayResponse.emv;
-    const txid = gatewayResponse.metadata?.txid || gatewayResponse.txid || gatewayResponse.id;
-
-    const order = this.orderRepo.create({
-      merchantId: link.merchantId,
-      externalReference,
-      gatewayPaymentId: gatewayResponse.id,
-      paymentMethod: PaymentMethod.PIX,
-      amountCents: link.amountCents,
-      feePercent: 0,
-      installments: 1,
-      status: OrderStatus.PENDING,
-      pixQrCodeBase64: qrCodeBase64,
-      pixEmv: emv,
-      pixTxid: txid,
-      payerName: dto.payerName,
-      payerEmail: dto.payerEmail,
-      payerDocument: dto.payerDocument,
-      checkoutLinkId: link.id,
-    });
-    return this.orderRepo.save(order);
   }
 
   async getOrderByExternalReference(externalReference: string): Promise<Order> {

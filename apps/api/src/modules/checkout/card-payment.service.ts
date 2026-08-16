@@ -32,75 +32,88 @@ export class CardPaymentService {
   ) {}
 
   async processCardPayment(slug: string, dto: CardPaymentDto): Promise<Order> {
-    const link = await this.linkRepo.findOne({ where: { slug } });
-    if (!link) {
-      throw new NotFoundException(`Checkout link ${slug} not found`);
-    }
+    return this.linkRepo.manager.transaction(async (transactionalEntityManager) => {
+      const link = await transactionalEntityManager.findOne(CheckoutLink, {
+        where: { slug },
+        lock: { mode: 'pessimistic_write' },
+      });
+      if (!link) {
+        throw new NotFoundException(`Checkout link ${slug} not found`);
+      }
 
-    if (link.status === CheckoutLinkStatus.PAID) {
-      throw new BadRequestException('Checkout link has already been paid');
-    }
+      if (link.status === CheckoutLinkStatus.PAID) {
+        throw new BadRequestException('Checkout link has already been paid');
+      }
 
-    if (link.status === CheckoutLinkStatus.EXPIRED || (link.expiresAt && new Date() > new Date(link.expiresAt))) {
-      link.status = CheckoutLinkStatus.EXPIRED;
-      await this.linkRepo.save(link);
-      throw new BadRequestException('Checkout link has expired');
-    }
+      if (link.status === CheckoutLinkStatus.EXPIRED || (link.expiresAt && new Date() > new Date(link.expiresAt))) {
+        link.status = CheckoutLinkStatus.EXPIRED;
+        await transactionalEntityManager.save(link);
+        throw new BadRequestException('Checkout link has expired');
+      }
 
-    const brand = dto.brand || 'Visa';
-    // Validate that the submitted feePercent matches exactly the fee table rate from the gateway
-    const verifiedFeePercent = await this.feesService.validateInstallmentFee(
-      dto.installments,
-      dto.feePercent,
-      brand,
-    );
+      const existingPending = await transactionalEntityManager.findOne(Order, {
+        where: { checkoutLinkId: link.id, status: OrderStatus.PENDING },
+      });
+      if (existingPending) {
+        throw new BadRequestException('Payment initiation already in progress for this link');
+      }
 
-    const externalReference = `ord_${uuidv4().replace(/-/g, '')}`;
-    const cardLast4 = dto.cardNumber.slice(-4);
+      const brand = dto.brand || 'Visa';
+      // Validate that the submitted feePercent matches exactly the fee table rate from the gateway
+      const verifiedFeePercent = await this.feesService.validateInstallmentFee(
+        dto.installments,
+        dto.feePercent,
+        brand,
+      );
 
-    this.logger.log(
-      `Processing Card payment for link ${slug}, externalReference: ${externalReference}, installments: ${dto.installments}, feePercent: ${verifiedFeePercent}%`,
-    );
+      const externalReference = `ord_${uuidv4().replace(/-/g, '')}`;
+      const cardLast4 = dto.cardNumber.slice(-4);
 
-    const gatewayResponse = await this.gatewayClient.createCardPayment(link.merchantId, {
-      amount: link.amountCents,
-      externalReference,
-      cardNumber: dto.cardNumber,
-      cardHolderName: dto.cardHolderName,
-      cardExpirationMonth: dto.cardExpirationMonth,
-      cardExpirationYear: dto.cardExpirationYear,
-      cardCvv: dto.cardCvv,
-      installments: dto.installments,
-      feePercent: verifiedFeePercent,
-      brand,
+      this.logger.log(
+        `Processing Card payment for link ${slug}, externalReference: ${externalReference}, installments: ${dto.installments}, feePercent: ${verifiedFeePercent}%`,
+      );
+
+      const gatewayResponse = await this.gatewayClient.createCardPayment(link.merchantId, {
+        amount: link.amountCents,
+        externalReference,
+        cardNumber: dto.cardNumber,
+        cardHolderName: dto.cardHolderName,
+        cardExpirationMonth: dto.cardExpirationMonth,
+        cardExpirationYear: dto.cardExpirationYear,
+        cardCvv: dto.cardCvv,
+        installments: dto.installments,
+        feePercent: verifiedFeePercent,
+        brand,
+      });
+
+      const gatewayPaymentId = gatewayResponse.id;
+      let orderStatus: OrderStatus = OrderStatus.PENDING;
+      if (gatewayResponse.status === 'APPROVED') {
+        orderStatus = OrderStatus.APPROVED;
+        link.status = CheckoutLinkStatus.PAID;
+        await transactionalEntityManager.save(link);
+      } else if (gatewayResponse.status === 'DENIED') {
+        orderStatus = OrderStatus.DENIED;
+      }
+
+      const order = transactionalEntityManager.create(Order, {
+        merchantId: link.merchantId,
+        externalReference,
+        gatewayPaymentId,
+        paymentMethod: PaymentMethod.CARD,
+        amountCents: link.amountCents,
+        feePercent: verifiedFeePercent,
+        installments: dto.installments,
+        status: orderStatus,
+        cardBrand: brand,
+        cardLast4,
+        payerName: dto.cardHolderName,
+        payerEmail: dto.payerEmail,
+        payerDocument: dto.payerDocument,
+        checkoutLinkId: link.id,
+      });
+
+      return transactionalEntityManager.save(Order, order);
     });
-
-    const gatewayPaymentId = gatewayResponse.id;
-    let orderStatus: OrderStatus = OrderStatus.PENDING;
-    if (gatewayResponse.status === 'APPROVED') {
-      orderStatus = OrderStatus.APPROVED;
-      link.status = CheckoutLinkStatus.PAID;
-      await this.linkRepo.save(link);
-    } else if (gatewayResponse.status === 'DENIED') {
-      orderStatus = OrderStatus.DENIED;
-    }
-
-    const order = this.orderRepo.create({
-      merchantId: link.merchantId,
-      externalReference,
-      gatewayPaymentId,
-      paymentMethod: PaymentMethod.CARD,
-      amountCents: link.amountCents,
-      feePercent: verifiedFeePercent,
-      installments: dto.installments,
-      status: orderStatus,
-      cardBrand: brand,
-      cardLast4,
-      payerName: dto.cardHolderName,
-      payerEmail: dto.payerEmail,
-      payerDocument: dto.payerDocument,
-      checkoutLinkId: link.id,
-    });
-    return this.orderRepo.save(order);
   }
 }
