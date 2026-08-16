@@ -112,6 +112,13 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'merchantId' })
+  merchant: User;
+
+  @Column()
+  merchantId: string;
+
   @Column({ unique: true })
   externalReference: string; // Correlates to BaaS order ID in Gateway
 
@@ -190,6 +197,13 @@ export class Withdrawal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'merchantId' })
+  merchant: User;
+
+  @Column()
+  merchantId: string;
+
   @Column({ nullable: true })
   gatewayWithdrawalId: string;
 
@@ -223,6 +237,9 @@ export class Withdrawal {
 export class WebhookEvent {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ unique: true })
+  deduplicationKey: string;
 
   @Column({ nullable: true })
   eventType: string; // PAYMENT_PIX, PAYMENT_CARD, WITHDRAWAL
