@@ -106,7 +106,8 @@ export interface GatewayTransactionItem {
 export interface GatewayWithdrawalRequest {
   amount: number; // in cents
   pixKey: string;
-  pixKeyType: 'CPF' | 'CNPJ' | 'EMAIL' | 'PHONE' | 'RANDOM';
+  document?: string;
+  pixKeyType?: 'CPF' | 'CNPJ' | 'EMAIL' | 'PHONE' | 'RANDOM';
 }
 
 export interface GatewayWithdrawalResponse {

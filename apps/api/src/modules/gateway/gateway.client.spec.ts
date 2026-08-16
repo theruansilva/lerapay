@@ -97,4 +97,35 @@ describe('LeraBoxGatewayClient', () => {
     jest.spyOn((client as any).http, 'get').mockRejectedValueOnce(new Error('Network Error'));
     await expect(client.getFees('Visa')).rejects.toThrow();
   });
+
+  it('should format requestWithdrawal payload with sanitized document and omit pixKeyType', async () => {
+    const requestSpy = jest.spyOn((client as any).http, 'request').mockResolvedValueOnce({
+      data: {
+        id: 'wth-123',
+        amount: 5000,
+        status: 'PENDING',
+        pixKey: '12345678901',
+        createdAt: '2026-08-16T00:00:00Z',
+      },
+    });
+
+    const res = await client.requestWithdrawal('merchant-123', {
+      amount: 5000,
+      pixKey: '12345678901',
+      pixKeyType: 'CPF',
+    });
+
+    expect(res.id).toBe('wth-123');
+    expect(requestSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'POST',
+        url: '/withdrawals',
+        data: {
+          amount: 5000,
+          pixKey: '12345678901',
+          document: '12345678901',
+        },
+      }),
+    );
+  });
 });

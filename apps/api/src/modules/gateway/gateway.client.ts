@@ -244,10 +244,18 @@ export class LeraBoxGatewayClient {
   }
 
   async requestWithdrawal(merchantId: string, payload: GatewayWithdrawalRequest): Promise<GatewayWithdrawalResponse> {
+    const user = await this.userRepo.findOneBy({ id: merchantId });
+    const rawDoc = payload.document || user?.document || this.config.get<string>('GATEWAY_DOCUMENT') || '';
+    const document = rawDoc.replace(/\D/g, '');
+
     return this.request<GatewayWithdrawalResponse>(merchantId, {
       method: 'POST',
       url: '/withdrawals',
-      data: payload,
+      data: {
+        amount: payload.amount,
+        pixKey: payload.pixKey,
+        document,
+      },
     });
   }
 

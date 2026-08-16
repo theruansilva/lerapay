@@ -115,6 +115,7 @@ export class AuthService implements OnModuleInit {
         document: saved.document,
       },
       token,
+      accessToken: token,
     };
   }
 
@@ -149,6 +150,7 @@ export class AuthService implements OnModuleInit {
         document: user.document,
       },
       token,
+      accessToken: token,
     };
   }
 
