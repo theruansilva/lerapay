@@ -60,7 +60,7 @@ describe('WithdrawalService', () => {
   });
 
   it('should request withdrawal successfully when sufficient funds', async () => {
-    const withdrawal = await service.requestWithdrawal({
+    const withdrawal = await service.requestWithdrawal('merchant-uuid', {
       amountCents: 50000, // R$ 500,00
       pixKey: 'lojista@pix.com',
       pixKeyType: PixKeyType.EMAIL,
@@ -68,6 +68,7 @@ describe('WithdrawalService', () => {
 
     expect(withdrawal.amountCents).toBe(50000);
     expect(withdrawal.pixKey).toBe('lojista@pix.com');
+    expect(withdrawal.merchantId).toBe('merchant-uuid');
     expect(withdrawal.status).toBe(WithdrawalStatus.PENDING);
     expect(mockWithdrawalRepo.save).toHaveBeenCalled();
   });
@@ -78,7 +79,7 @@ describe('WithdrawalService', () => {
     });
 
     await expect(
-      service.requestWithdrawal({
+      service.requestWithdrawal('merchant-uuid', {
         amountCents: 50000,
         pixKey: 'lojista@pix.com',
         pixKeyType: PixKeyType.EMAIL,

@@ -22,21 +22,21 @@ export class WithdrawalService {
     private readonly walletService: WalletService,
   ) {}
 
-  async requestWithdrawal(dto: CreateWithdrawalDto): Promise<Withdrawal> {
-    const { balanceCents } = await this.walletService.getBalance();
+  async requestWithdrawal(merchantId: string, dto: CreateWithdrawalDto): Promise<Withdrawal> {
+    const { balanceCents } = await this.walletService.getBalance(merchantId);
     if (balanceCents < dto.amountCents) {
       throw new BadRequestException(
         `Insufficient funds. Available balance: R$ ${(balanceCents / 100).toFixed(2)}, requested: R$ ${(dto.amountCents / 100).toFixed(2)}`,
       );
     }
 
-    this.logger.log(`Requesting withdrawal of ${dto.amountCents} cents to ${dto.pixKey}`);
+    this.logger.log(`Requesting withdrawal of ${dto.amountCents} cents to ${dto.pixKey} for merchant ${merchantId}`);
 
     let gatewayWithdrawalId: string | undefined;
     let status: WithdrawalStatus = WithdrawalStatus.PENDING;
 
     try {
-      const response = await this.gatewayClient.requestWithdrawal({
+      const response = await this.gatewayClient.requestWithdrawal(merchantId, {
         amount: dto.amountCents,
         pixKey: dto.pixKey,
         pixKeyType: dto.pixKeyType,
@@ -51,6 +51,7 @@ export class WithdrawalService {
     }
 
     const withdrawal = this.withdrawalRepo.create({
+      merchantId,
       amountCents: dto.amountCents,
       pixKey: dto.pixKey,
       pixKeyType: dto.pixKeyType,
@@ -61,27 +62,28 @@ export class WithdrawalService {
     return this.withdrawalRepo.save(withdrawal);
   }
 
-  async listWithdrawals(): Promise<Withdrawal[]> {
+  async listWithdrawals(merchantId: string): Promise<Withdrawal[]> {
     return this.withdrawalRepo.find({
+      where: { merchantId },
       order: { createdAt: 'DESC' },
     });
   }
 
-  async getWithdrawal(id: string): Promise<Withdrawal> {
-    const withdrawal = await this.withdrawalRepo.findOne({ where: { id } });
+  async getWithdrawal(merchantId: string, id: string): Promise<Withdrawal> {
+    const withdrawal = await this.withdrawalRepo.findOne({ where: { id, merchantId } });
     if (!withdrawal) {
       throw new NotFoundException(`Withdrawal ${id} not found`);
     }
 
     if (withdrawal.gatewayWithdrawalId && withdrawal.status === WithdrawalStatus.PENDING) {
       try {
-        const gwRes = await this.gatewayClient.getWithdrawal(withdrawal.gatewayWithdrawalId);
+        const gwRes = await this.gatewayClient.getWithdrawal(merchantId, withdrawal.gatewayWithdrawalId);
         if (gwRes.status && gwRes.status !== withdrawal.status) {
           withdrawal.status = gwRes.status as WithdrawalStatus;
           await this.withdrawalRepo.save(withdrawal);
         }
       } catch (error) {
-        this.logger.warn(`Failed to poll status for withdrawal ${id}: ${error}`);
+        this.logger.warn(`Failed to poll status for withdrawal ${id} for merchant ${merchantId}: ${error}`);
       }
     }
 

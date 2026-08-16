@@ -21,9 +21,9 @@ describe('WalletService', () => {
       find: jest.fn(),
       createQueryBuilder: jest.fn().mockReturnValue({
         leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
-        take: jest.fn().mockReturnThis(),
         getMany: jest.fn().mockResolvedValue([
           {
             id: 'ord-1',
@@ -57,13 +57,13 @@ describe('WalletService', () => {
   });
 
   it('should return balance from gateway client in cents and formatted BRL', async () => {
-    const result = await service.getBalance();
+    const result = await service.getBalance('merchant-123');
     expect(result.balanceCents).toBe(150000);
     expect(result.formattedBrl).toContain('1.500,00');
   });
 
   it('should return statement transactions with filters', async () => {
-    const items = await service.getStatement({ status: 'APPROVED' });
+    const items = await service.getStatement('merchant-123', { status: 'APPROVED' });
     expect(items).toHaveLength(1);
     expect(items[0].status).toBe('APPROVED');
     expect(items[0].amountCents).toBe(5000);

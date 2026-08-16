@@ -26,9 +26,9 @@ export class WalletService {
     private readonly orderRepo: Repository<Order>,
   ) {}
 
-  async getBalance(): Promise<WalletBalanceDto> {
+  async getBalance(merchantId: string): Promise<WalletBalanceDto> {
     try {
-      const gwWallet = await this.gatewayClient.getWallet();
+      const gwWallet = await this.gatewayClient.getWallet(merchantId);
       const balanceCents = Number(gwWallet.balance || 0);
 
       return {
@@ -40,10 +40,10 @@ export class WalletService {
         currency: gwWallet.currency || 'BRL',
       };
     } catch (error) {
-      this.logger.warn(`Could not fetch balance from live gateway: ${error}. Aggregating local approved orders.`);
+      this.logger.warn(`Could not fetch balance from live gateway for merchant ${merchantId}: ${error}. Aggregating local approved orders.`);
       // Fallback: calculate balance from approved orders
       const orders = await this.orderRepo.find({
-        where: { status: OrderStatus.APPROVED },
+        where: { status: OrderStatus.APPROVED, merchantId },
       });
       const balanceCents = orders.reduce((sum, ord) => sum + ord.amountCents, 0);
 
@@ -58,9 +58,10 @@ export class WalletService {
     }
   }
 
-  async getStatement(filter: StatementFilterQuery) {
+  async getStatement(merchantId: string, filter: StatementFilterQuery) {
     const query = this.orderRepo.createQueryBuilder('order')
       .leftJoinAndSelect('order.checkoutLink', 'link')
+      .where('order.merchantId = :merchantId', { merchantId })
       .orderBy('order.createdAt', 'DESC');
 
     if (filter.status) {

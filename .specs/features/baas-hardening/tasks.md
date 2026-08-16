@@ -44,7 +44,7 @@
 **Gate**: quick
 **Commit**: `♻️ refactor(database): scope financial records to merchants`
 
-### T2: Scope wallet records to merchants
+### [x] T2: Scope wallet records to merchants
 **What**: Pass merchant identity through wallet and withdrawal operations and query only owned records.
 **Where**: `apps/api/src/modules/wallet/wallet.service.ts`
 **Depends on**: T1
