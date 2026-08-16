@@ -1,20 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { LeraBoxGatewayClient } from './gateway.client';
-
+import { User } from '../../database/entities';
 describe('LeraBoxGatewayClient', () => {
   let client: LeraBoxGatewayClient;
   let mockConfigService: { get: jest.Mock };
+  let mockUserRepo: Record<string, jest.Mock>;
 
   beforeEach(async () => {
     mockConfigService = {
       get: jest.fn().mockImplementation((key: string, defaultValue?: string) => {
         if (key === 'GATEWAY_API_URL') return 'https://api.branchpay.com.br/api';
-        if (key === 'GATEWAY_EMAIL') return 'test@lerapay.com';
-        if (key === 'GATEWAY_PASSWORD') return 'secret123';
         if (key === 'NODE_ENV') return 'test';
         return defaultValue;
       }),
+    };
+
+    mockUserRepo = {
+      findOneBy: jest.fn().mockResolvedValue({
+        id: 'merchant-123',
+        document: '12345678901',
+        gatewayPassword: 'secretpassword',
+        gatewayToken: 'existing-token',
+        gatewayTokenExpiresAt: Date.now() + 100000,
+      }),
+      save: jest.fn().mockImplementation((u) => Promise.resolve(u)),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -24,6 +35,10 @@ describe('LeraBoxGatewayClient', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUserRepo,
+        },
       ],
     }).compile();
 
@@ -31,8 +46,16 @@ describe('LeraBoxGatewayClient', () => {
   });
 
   it('should instantiate and return token on authenticate', async () => {
-    // In test / simulation environment fallback
-    const token = await client.authenticate();
+    mockUserRepo.findOneBy.mockResolvedValueOnce({
+      id: 'merchant-123',
+      document: '12345678901',
+      gatewayPassword: 'secretpassword',
+      gatewayToken: null,
+      gatewayTokenExpiresAt: null,
+    });
+    // In test environment, mock the client authenticate or let it throw if no internet,
+    // but we can mock finding the user with a token to avoid real HTTP requests in tests
+    const token = await client.getToken('merchant-123');
     expect(token).toBeDefined();
     expect(typeof token).toBe('string');
   });

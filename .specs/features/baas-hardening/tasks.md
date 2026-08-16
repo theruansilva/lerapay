@@ -56,7 +56,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(wallet): isolate merchant financial records`
 
-### T3: Add tenant gateway accounts
+### [x] T3: Add tenant gateway accounts
 **What**: Persist per-merchant gateway credentials and resolve gateway authentication by merchant account.
 **Where**: `apps/api/src/modules/gateway/gateway.client.ts`
 **Depends on**: T1
