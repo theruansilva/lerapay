@@ -4,6 +4,7 @@ import {
   validateCPF,
   maskCNPJ,
   validateCNPJ,
+  maskCPFOrCNPJ,
   maskCardNumber,
   detectCardBrand,
   validateCardLuhn,
@@ -46,6 +47,17 @@ describe('Validators & Masks Utility', () => {
     it('should reject invalid CNPJ', () => {
       expect(validateCNPJ('11.111.111/1111-11')).toBe(false);
       expect(validateCNPJ('10.480.314/0001-99')).toBe(false);
+    });
+  });
+
+  describe('CPF or CNPJ dynamic mask', () => {
+    it('should format CPF when up to 11 digits', () => {
+      expect(maskCPFOrCNPJ('12345678901')).toBe('123.456.789-01');
+      expect(maskCPFOrCNPJ('123456')).toBe('123.456');
+    });
+
+    it('should format CNPJ when more than 11 digits', () => {
+      expect(maskCPFOrCNPJ('10480314000192')).toBe('10.480.314/0001-92');
     });
   });
 

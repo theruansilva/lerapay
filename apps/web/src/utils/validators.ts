@@ -78,6 +78,14 @@ export function validateCNPJ(cnpj: string): boolean {
  return true;
 }
 
+export function maskCPFOrCNPJ(value: string): string {
+ const digits = value.replace(/\D/g, '');
+ if (digits.length > 11) {
+  return maskCNPJ(digits);
+ }
+ return maskCPF(digits);
+}
+
 // --- CARTÃO DE CRÉDITO ---
 
 export type CardBrandType = 'Visa' | 'Mastercard' | 'Elo' | 'Amex' | 'Hipercard' | 'Outro';

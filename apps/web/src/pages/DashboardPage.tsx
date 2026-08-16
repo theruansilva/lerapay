@@ -22,6 +22,7 @@ import {
   validateCPF,
   maskCNPJ,
   validateCNPJ,
+  maskCPFOrCNPJ,
   maskCurrencyBRL,
   parseCurrencyBRLToCents,
 } from '../utils/validators';
@@ -545,8 +546,9 @@ export function DashboardPage() {
                     type="text"
                     required
                     value={gwDocument}
-                    onChange={(e) => setGwDocument(e.target.value)}
-                    placeholder="Apenas dígitos"
+                    onChange={(e) => setGwDocument(maskCPFOrCNPJ(e.target.value))}
+                    placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                    maxLength={18}
                     className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary transition font-mono"
                   />
                 </div>
