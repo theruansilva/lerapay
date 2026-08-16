@@ -36,16 +36,8 @@ export const ENTITIES = [
           logging: isDev,
           extra: {
             decimalNumbers: true,
-            // Disable FK checks per-connection so TypeORM ALTER TABLE
-            // doesn't hit child-row violations on MySQL 8 during sync.
-            // afterCreate runs once per new pool connection before it's used.
-            pool: {
-              afterCreate: (conn: { query: (sql: string, cb: (err: Error | null) => void) => void }, done: (err: Error | null, conn: unknown) => void) => {
-                conn.query('SET FOREIGN_KEY_CHECKS=0', (err) => done(err, conn));
-              },
-            },
           },
-        } as TypeOrmModuleOptions;
+        };
       },
     }),
     TypeOrmModule.forFeature(ENTITIES),
