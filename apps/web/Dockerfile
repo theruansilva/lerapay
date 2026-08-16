@@ -10,7 +10,7 @@ FROM base AS development
 COPY apps/web/public apps/web/public
 COPY apps/web/src apps/web/src
 EXPOSE 5173
-CMD ["npm", "run", "dev", "--workspace=apps/web"]
+CMD ["npm", "run", "dev", "--workspace=apps/web", "--", "--host", "0.0.0.0", "--port", "5173"]
 
 FROM base AS builder
 COPY apps/web/public apps/web/public
