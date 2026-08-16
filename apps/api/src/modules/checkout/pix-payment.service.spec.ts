@@ -7,8 +7,8 @@ import { LeraBoxGatewayClient } from '../gateway/gateway.client';
 
 describe('PixPaymentService', () => {
   let service: PixPaymentService;
-  let mockLinkRepo: Record<string, jest.Mock>;
-  let mockOrderRepo: Record<string, jest.Mock>;
+  let mockLinkRepo: any;
+  let mockOrderRepo: any;
   let mockGatewayClient: { createPixPayment: jest.Mock };
 
   beforeEach(async () => {

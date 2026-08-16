@@ -8,8 +8,8 @@ import { FeesService } from '../fees/fees.service';
 
 describe('CardPaymentService', () => {
   let service: CardPaymentService;
-  let mockLinkRepo: Record<string, jest.Mock>;
-  let mockOrderRepo: Record<string, jest.Mock>;
+  let mockLinkRepo: any;
+  let mockOrderRepo: any;
   let mockGatewayClient: { createCardPayment: jest.Mock };
   let mockFeesService: { validateInstallmentFee: jest.Mock };
 

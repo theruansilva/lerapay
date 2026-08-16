@@ -33,8 +33,22 @@ export class User {
   @Column({ nullable: true })
   gatewayStoreKey: string;
 
+  @Column({ nullable: true })
+  gatewayPassword: string;
+
+  @Column({ nullable: true })
+  gatewayToken: string;
+
+  @Column({ type: 'bigint', nullable: true })
+  gatewayTokenExpiresAt: number;
   @OneToMany(() => CheckoutLink, (link) => link.merchant)
   checkoutLinks: CheckoutLink[];
+
+  @OneToMany(() => Order, (order) => order.merchant)
+  orders: Order[];
+
+  @OneToMany(() => Withdrawal, (w) => w.merchant)
+  withdrawals: Withdrawal[];
 
   @CreateDateColumn()
   createdAt: Date;

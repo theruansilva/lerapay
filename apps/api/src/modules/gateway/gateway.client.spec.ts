@@ -45,19 +45,38 @@ describe('LeraBoxGatewayClient', () => {
     client = module.get<LeraBoxGatewayClient>(LeraBoxGatewayClient);
   });
 
-  it('should instantiate and return token on authenticate', async () => {
+  it('should return cached token if not expired', async () => {
     mockUserRepo.findOneBy.mockResolvedValueOnce({
+      id: 'merchant-123',
+      document: '12345678901',
+      gatewayPassword: 'secretpassword',
+      gatewayToken: 'existing-mock-token',
+      gatewayTokenExpiresAt: Date.now() + 12 * 60 * 60 * 1000,
+    });
+    const token = await client.getToken('merchant-123');
+    expect(token).toBe('existing-mock-token');
+  });
+
+  it('should authenticate with gateway using document and password to get new token', async () => {
+    mockUserRepo.findOneBy.mockResolvedValue({
       id: 'merchant-123',
       document: '12345678901',
       gatewayPassword: 'secretpassword',
       gatewayToken: null,
       gatewayTokenExpiresAt: null,
     });
-    // In test environment, mock the client authenticate or let it throw if no internet,
-    // but we can mock finding the user with a token to avoid real HTTP requests in tests
-    const token = await client.getToken('merchant-123');
-    expect(token).toBeDefined();
-    expect(typeof token).toBe('string');
+
+    jest.spyOn((client as any).http, 'post').mockResolvedValueOnce({
+      data: {
+        access_token: 'new-gateway-token-abc',
+        codigoCliente: '123456',
+        chaveLoja: 'storekey-xyz',
+      },
+    });
+
+    const token = await client.authenticate('merchant-123');
+    expect(token).toBe('new-gateway-token-abc');
+    expect(mockUserRepo.save).toHaveBeenCalled();
   });
 
   it('should return gateway fees list when gateway call is successful', async () => {

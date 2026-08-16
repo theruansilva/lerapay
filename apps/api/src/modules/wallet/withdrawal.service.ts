@@ -38,8 +38,8 @@ export class WithdrawalService {
       pixKeyType: dto.pixKeyType,
     });
 
-    gatewayWithdrawalId = response.id;
-    status = (response.status as WithdrawalStatus) || WithdrawalStatus.PENDING;
+    const gatewayWithdrawalId = response.id;
+    const status = (response.status as WithdrawalStatus) || WithdrawalStatus.PENDING;
     const withdrawal = this.withdrawalRepo.create({
       merchantId,
       amountCents: dto.amountCents,
