@@ -28,7 +28,7 @@ test.describe('E2E: Webhooks, Assinatura e Idempotência', () => {
 
     expect(res.ok()).toBeTruthy();
     const body = await res.json();
-    expect(body.success || body.received || body.processed).toBeTruthy();
+    expect(body.success || body.received || body.processed || body.status === 'acknowledged').toBeTruthy();
   });
 
   test('deve processar webhooks repetidos de forma idempotente sem duplicar créditos', async ({

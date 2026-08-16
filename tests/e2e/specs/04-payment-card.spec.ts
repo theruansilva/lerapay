@@ -15,7 +15,7 @@ test.describe('E2E: Fluxo de Pagamento com Cartão de Crédito', () => {
     // Valida que o seletor de parcelas carrega opções
     await expect(checkoutPage.cardInstallmentsSelect).toBeVisible();
     const options = checkoutPage.cardInstallmentsSelect.locator('option');
-    await expect(options.first()).toBeVisible();
+    await expect(options).not.toHaveCount(0);
 
     // Preenche com cartão válido Visa
     await checkoutPage.payWithCard({
@@ -24,7 +24,7 @@ test.describe('E2E: Fluxo de Pagamento com Cartão de Crédito', () => {
     });
 
     // Valida estado de sucesso ou recusa simulada pelo gateway
-    const result = page.locator('text=/pagamento aprovado|recusado|não autorizada/i');
+    const result = page.locator('text=/pagamento aprovado|recusado|não autorizada/i').first();
     await expect(result).toBeVisible({ timeout: 15_000 });
   });
 

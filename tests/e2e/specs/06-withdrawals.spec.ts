@@ -10,7 +10,7 @@ test.describe('E2E: Solicitação de Saques e Transferências', () => {
   test('deve abrir modal de saque e validar preenchimento de chave Pix', async ({ dashboardPage, page }) => {
     await dashboardPage.withdrawButton.click();
 
-    await expect(page.getByText(/solicitar saque|transferência pix/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /solicitar saque|transferência pix/i })).toBeVisible();
 
     // Preenche dados do saque
     await dashboardPage.withdrawAmountInput.fill('50,00');

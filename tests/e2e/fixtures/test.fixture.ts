@@ -40,15 +40,27 @@ export const test = base.extend<BaasFixtures>({
         const body = await loginRes.json();
         token = body.accessToken;
       } else {
-        const regRes = await request.post('http://localhost:3000/api/auth/register', {
+        // Try demo credentials with 123456
+        const demoLoginRes = await request.post('http://localhost:3000/api/auth/login', {
           data: {
-            name: 'Demo Merchant',
             email: 'demo@lerapay.com',
-            password: 'password123',
+            password: '123456',
           },
         });
-        const regBody = await regRes.json();
-        token = regBody.accessToken;
+        if (demoLoginRes.ok()) {
+          const demoBody = await demoLoginRes.json();
+          token = demoBody.accessToken;
+        } else {
+          const regRes = await request.post('http://localhost:3000/api/auth/register', {
+            data: {
+              name: 'Demo Merchant',
+              email: 'demo@lerapay.com',
+              password: 'password123',
+            },
+          });
+          const regBody = await regRes.json();
+          token = regBody.accessToken;
+        }
       }
 
       const linkRes = await request.post('http://localhost:3000/api/checkout/links', {

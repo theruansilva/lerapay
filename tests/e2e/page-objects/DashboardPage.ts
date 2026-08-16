@@ -33,15 +33,15 @@ export class DashboardPage {
     this.page = page;
     this.balanceHeading = page.locator('div:has-text("Saldo Disponível") + div, h2:has-text("R$"), div:has-text("Saldo em Conta")');
     this.refreshBalanceButton = page.locator('button[title*="Atualizar"], button:has-text("Atualizar")');
-    this.newLinkButton = page.getByRole('button', { name: /novo link/i });
-    this.withdrawButton = page.getByRole('button', { name: /sacar/i });
+    this.newLinkButton = page.getByRole('button', { name: /novo link|criar.*link/i });
+    this.withdrawButton = page.getByRole('button', { name: /saque|sacar/i });
     this.gatewayLinkButton = page.getByRole('button', { name: /vincular gateway/i });
     this.logoutButton = page.getByRole('button', { name: /sair/i });
 
     // Modals
     this.linkModalTitleInput = page.locator('input[placeholder*="Ex: Consultoria"], input[placeholder*="Título"]');
     this.linkModalAmountInput = page.locator('div[role="dialog"] input[placeholder*="0,00"], .fixed input[placeholder*="0,00"]');
-    this.linkModalSubmitButton = page.getByRole('button', { name: /criar link/i });
+    this.linkModalSubmitButton = page.getByRole('button', { name: /gerar link|criar link/i });
 
     this.withdrawAmountInput = page.locator('div:has-text("Solicitar Saque") input[placeholder*="0,00"]');
     this.withdrawKeyTypeSelect = page.locator('div:has-text("Solicitar Saque") select');

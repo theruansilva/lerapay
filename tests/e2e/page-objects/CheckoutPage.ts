@@ -35,16 +35,16 @@ export class CheckoutPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.pixTab = page.getByRole('button', { name: /pix/i });
-    this.cardTab = page.getByRole('button', { name: /cartão/i });
+    this.pixTab = page.getByRole('button', { name: /pagar com pix/i });
+    this.cardTab = page.getByRole('button', { name: /cartão de crédito/i });
 
     // Pix
-    this.pixNameInput = page.locator('input[placeholder*="Nome completo"], input[placeholder*="Nome"]');
-    this.pixEmailInput = page.locator('input[placeholder*="e-mail"], input[placeholder*="Email"]');
+    this.pixNameInput = page.locator('input[placeholder="Nome do pagador"], input[placeholder*="Nome completo"], input[placeholder*="Nome"]');
+    this.pixEmailInput = page.locator('input[type="email"], input[placeholder*="e-mail"], input[placeholder*="Email"]');
     this.pixDocInput = page.locator('input[placeholder*="000.000.000-00"], input[placeholder*="CPF"]');
     this.pixSubmitButton = page.getByRole('button', { name: /gerar qr code pix|gerar pix/i });
 
-    this.qrCodeSvg = page.locator('svg').filter({ hasNot: page.locator('button svg') });
+    this.qrCodeSvg = page.locator('.bg-white svg, svg[width="200"]').first();
     this.emvCodeInput = page.locator('input[readonly]');
     this.copyEmvButton = page.getByRole('button', { name: /copiar/i });
 

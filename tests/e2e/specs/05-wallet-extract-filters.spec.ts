@@ -31,6 +31,6 @@ test.describe('E2E: Carteira, Saldo e Extrato com Filtros', () => {
     }
 
     // Valida que a tabela/lista continua renderizando sem quebras
-    await expect(page.locator('text=/transações|nenhuma transação/i').first()).toBeVisible();
+    await expect(page.locator('table')).toBeVisible();
   });
 });

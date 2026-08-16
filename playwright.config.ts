@@ -31,8 +31,9 @@ export default defineConfig({
   webServer: [
     {
       command: 'bun run --cwd apps/api start:dev',
-      port: 3000,
-      reuseExistingServer: !process.env.CI,
+      url: 'http://localhost:3000/api/docs',
+      reuseExistingServer: true,
+      timeout: 120_000,
       env: {
         NODE_ENV: 'test',
         PORT: '3000',
@@ -40,8 +41,9 @@ export default defineConfig({
     },
     {
       command: 'bun run --cwd apps/web dev',
-      port: 5173,
-      reuseExistingServer: !process.env.CI,
+      url: 'http://localhost:5173',
+      reuseExistingServer: true,
+      timeout: 120_000,
     },
   ],
 });

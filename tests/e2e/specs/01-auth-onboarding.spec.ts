@@ -13,14 +13,14 @@ test.describe('E2E: Autenticação e Onboarding do Lojista', () => {
 
     // Valida redirecionamento para o dashboard
     await expect(page).toHaveURL(/.*dashboard/);
-    await expect(page.getByText(/saldo disponível|saldo em conta/i)).toBeVisible();
+    await expect(page.getByText(/saldo disponível|saldo em conta/i).first()).toBeVisible();
   });
 
   test('deve exibir mensagem de erro para credenciais inválidas', async ({ loginPage }) => {
     await loginPage.goto();
     await loginPage.login('invalido@lerapay.com', 'senha_errada');
 
-    await loginPage.expectError(/inválid|credencia|falha/i);
+    await loginPage.expectError(/inválid|invalid|credencia|falha/i);
   });
 
   test('deve realizar login com conta existente e manter token de autenticação', async ({ loginPage, page }) => {

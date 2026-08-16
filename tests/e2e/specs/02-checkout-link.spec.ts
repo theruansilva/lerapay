@@ -15,7 +15,7 @@ test.describe('E2E: Gestão de Links de Checkout', () => {
 
     // Valida que o link foi renderizado na listagem
     await expect(page.getByText(title)).toBeVisible();
-    await expect(page.getByText(/199,90/)).toBeVisible();
+    await expect(page.getByText(/199,90/).first()).toBeVisible();
   });
 
   test('deve permitir acesso público ao checkout através do slug gerado', async ({ createCheckoutLinkViaApi, checkoutPage, page }) => {
@@ -26,7 +26,7 @@ test.describe('E2E: Gestão de Links de Checkout', () => {
     // Valida renderização dos dados do produto e valor
     await expect(page.getByText('Consultoria de Arquitetura BaaS')).toBeVisible();
     await expect(page.getByText(/450,00/)).toBeVisible();
-    await expect(page.getByRole('button', { name: /pix/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /cartão/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /pagar com pix/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /cartão de crédito/i })).toBeVisible();
   });
 });
