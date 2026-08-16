@@ -146,47 +146,31 @@ export class LeraBoxGatewayClient {
   }
 
   async getFees(brand?: string): Promise<GatewayFeeItem[]> {
-    try {
-      const normalizedBrand = brand ? brand.toUpperCase() : undefined;
-      const response = await this.http.get<GatewayFeeItem[] | { total?: number; fees?: GatewayFeeItem[] }>('/fees', {
-        params: normalizedBrand ? { brand: normalizedBrand } : undefined,
-      });
+    const normalizedBrand = brand ? brand.toUpperCase() : undefined;
+    const response = await this.http.get<GatewayFeeItem[] | { total?: number; fees?: GatewayFeeItem[] }>('/fees', {
+      params: normalizedBrand ? { brand: normalizedBrand } : undefined,
+    });
 
-      let items: GatewayFeeItem[] = [];
-      const rawData = response.data;
-      if (Array.isArray(rawData)) {
-        items = rawData;
-      } else if (rawData && typeof rawData === 'object' && 'fees' in rawData && Array.isArray(rawData.fees)) {
-        items = rawData.fees;
-      }
-
-      if (items.length > 0) {
-        return items.map((f) => ({
-          id: f.id,
-          installments: Number(f.installments),
-          feePercent: Number(f.feePercent),
-          brand: f.brand || normalizedBrand || 'VISA',
-          feePercentFormatted: f.feePercentFormatted,
-        }));
-      }
-
-      return this.getDefaultFees(brand);
-    } catch (error) {
-      this.logger.warn('Failed to fetch public fees from gateway, using standard fallback table');
-      return this.getDefaultFees(brand);
+    let items: GatewayFeeItem[] = [];
+    const rawData = response.data;
+    if (Array.isArray(rawData)) {
+      items = rawData;
+    } else if (rawData && typeof rawData === 'object' && 'fees' in rawData && Array.isArray(rawData.fees)) {
+      items = rawData.fees;
     }
-  }
 
-  private getDefaultFees(brand: string = 'Visa'): GatewayFeeItem[] {
-    return [
-      { installments: 1, feePercent: 2.99, brand },
-      { installments: 2, feePercent: 3.49, brand },
-      { installments: 3, feePercent: 3.99, brand },
-      { installments: 6, feePercent: 5.49, brand },
-      { installments: 12, feePercent: 8.99, brand },
-    ];
-  }
+    if (items.length > 0) {
+      return items.map((f) => ({
+        id: f.id,
+        installments: Number(f.installments),
+        feePercent: Number(f.feePercent),
+        brand: f.brand || normalizedBrand || 'VISA',
+        feePercentFormatted: f.feePercentFormatted,
+      }));
+    }
 
+    throw new HttpException('Gateway did not return fee rates', HttpStatus.BAD_GATEWAY);
+  }
   async createPixPayment(merchantId: string, payload: GatewayPixPaymentRequest): Promise<GatewayPixPaymentResponse> {
     const data: Record<string, unknown> = {
       amount: payload.amount,

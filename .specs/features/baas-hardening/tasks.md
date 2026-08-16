@@ -104,7 +104,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(checkout): serialize payment initiation`
 
-### T7: Snapshot verified card fees
+### [x] T7: Snapshot verified card fees
 **What**: Persist the verified brand, installment count, and fee snapshot before card charging and reject unavailable gateway rates.
 **Where**: `apps/api/src/modules/fees/fees.service.ts`
 **Depends on**: T5

@@ -60,11 +60,22 @@ describe('LeraBoxGatewayClient', () => {
     expect(typeof token).toBe('string');
   });
 
-  it('should return default fees list when gateway call falls back', async () => {
+  it('should return gateway fees list when gateway call is successful', async () => {
+    jest.spyOn((client as any).http, 'get').mockResolvedValueOnce({
+      data: [
+        { installments: 1, feePercent: 2.99, brand: 'Visa' },
+        { installments: 2, feePercent: 3.49, brand: 'Visa' },
+      ],
+    });
     const fees = await client.getFees('Visa');
     expect(fees).toBeDefined();
-    expect(Array.isArray(fees)).toBe(true);
-    expect(fees.length).toBeGreaterThan(0);
+    expect(fees).toHaveLength(2);
     expect(fees[0].installments).toBe(1);
+    expect(fees[0].feePercent).toBe(2.99);
+  });
+
+  it('should propagate error when gateway call fails', async () => {
+    jest.spyOn((client as any).http, 'get').mockRejectedValueOnce(new Error('Network Error'));
+    await expect(client.getFees('Visa')).rejects.toThrow();
   });
 });
