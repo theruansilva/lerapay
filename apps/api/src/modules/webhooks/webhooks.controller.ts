@@ -5,8 +5,12 @@ import {
   Headers,
   HttpCode,
   HttpStatus,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 import { WebhookReceiverService, WebhookPayload } from './webhook-receiver.service';
 import { WebhookProcessorService } from './webhook-processor.service';
 
@@ -29,10 +33,24 @@ export class WebhooksController {
   @ApiResponse({ status: 200, description: 'Webhook acknowledged and processed' })
   async handleWebhook(
     @Body() payload: WebhookPayload,
+    @Req() req: Request,
     @Headers('x-lera-box-signature') signature?: string,
   ) {
-    const event = await this.receiverService.recordEvent(payload, signature);
+    const rawBody = req.rawBody;
+    const event = await this.receiverService.recordEvent(payload, rawBody, signature);
     await this.processorService.processEvent(event);
     return { status: 'acknowledged', eventId: event.id };
+  }
+
+  @Post('setup')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Register the three mandated callback event types' })
+  @ApiResponse({ status: 200, description: 'Callbacks registered successfully' })
+  async setupWebhooks(
+    @Req() req: Request & { user: { id: string } },
+    @Body() body: { url: string },
+  ) {
+    return this.receiverService.registerAllWebhooks(req.user.id, body.url);
   }
 }

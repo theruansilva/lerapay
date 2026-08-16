@@ -250,4 +250,15 @@ export class LeraBoxGatewayClient {
       url: `/withdrawals/${id}`,
     });
   }
+
+  async registerWebhook(
+    merchantId: string,
+    payload: { url: string; event: string },
+  ): Promise<any> {
+    return this.request(merchantId, {
+      method: 'POST',
+      url: '/webhooks',
+      data: payload,
+    });
+  }
 }

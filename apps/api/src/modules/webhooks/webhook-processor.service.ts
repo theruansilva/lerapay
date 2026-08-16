@@ -54,18 +54,35 @@ export class WebhookProcessorService {
           });
 
           if (order) {
-            if (status === 'APPROVED') {
-              order.status = OrderStatus.APPROVED;
-              if (order.checkoutLink) {
-                order.checkoutLink.status = CheckoutLinkStatus.PAID;
-                await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
+            const isTerminal = [
+              OrderStatus.APPROVED,
+              OrderStatus.DENIED,
+              OrderStatus.EXPIRED,
+              OrderStatus.CANCELLED,
+            ].includes(order.status as OrderStatus);
+
+            if (!isTerminal) {
+              if (status === 'APPROVED') {
+                order.status = OrderStatus.APPROVED;
+                if (order.checkoutLink) {
+                  order.checkoutLink.status = CheckoutLinkStatus.PAID;
+                  await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
+                }
+              } else if (status === 'DENIED') {
+                order.status = OrderStatus.DENIED;
+              } else if (status === 'EXPIRED') {
+                order.status = OrderStatus.EXPIRED;
+              } else if (status === 'CANCELLED') {
+                order.status = OrderStatus.CANCELLED;
+                if (order.checkoutLink) {
+                  order.checkoutLink.status = CheckoutLinkStatus.CANCELLED;
+                  await queryRunner.manager.save(CheckoutLink, order.checkoutLink);
+                }
               }
-            } else if (status === 'DENIED') {
-              order.status = OrderStatus.DENIED;
-            } else if (status === 'EXPIRED') {
-              order.status = OrderStatus.EXPIRED;
+              await queryRunner.manager.save(Order, order);
+            } else {
+              this.logger.warn(`Order ${order.id} is already in terminal state ${order.status}. Ignoring late status update to ${status}.`);
             }
-            await queryRunner.manager.save(Order, order);
           }
         }
       } else if (eventType === 'WITHDRAWAL') {
@@ -76,16 +93,24 @@ export class WebhookProcessorService {
           });
 
           if (withdrawal) {
-            if (status === 'APPROVED') {
-              withdrawal.status = WithdrawalStatus.APPROVED;
-            } else if (status === 'DENIED') {
-              withdrawal.status = WithdrawalStatus.DENIED;
+            const isTerminal = [
+              WithdrawalStatus.APPROVED,
+              WithdrawalStatus.DENIED,
+            ].includes(withdrawal.status as WithdrawalStatus);
+
+            if (!isTerminal) {
+              if (status === 'APPROVED') {
+                withdrawal.status = WithdrawalStatus.APPROVED;
+              } else if (status === 'DENIED') {
+                withdrawal.status = WithdrawalStatus.DENIED;
+              }
+              await queryRunner.manager.save(Withdrawal, withdrawal);
+            } else {
+              this.logger.warn(`Withdrawal ${withdrawal.id} is already in terminal state ${withdrawal.status}. Ignoring late status update to ${status}.`);
             }
-            await queryRunner.manager.save(Withdrawal, withdrawal);
           }
         }
       }
-
       event.processed = true;
       event.processingError = null;
       await queryRunner.manager.save(WebhookEvent, event);

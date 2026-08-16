@@ -116,7 +116,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(fees): require gateway fee snapshots`
 
-### T8: Authenticate and deduplicate webhooks
+### [x] T8: Authenticate and deduplicate webhooks
 **What**: Validate HMAC over raw bytes, register required gateway callbacks, and atomically deduplicate state updates.
 **Where**: `apps/api/src/modules/webhooks/webhook-receiver.service.ts`
 **Depends on**: T1, T3, T6

@@ -124,4 +124,64 @@ describe('WebhookProcessorService', () => {
     expect(result).toBe(true);
     expect(mockDataSource.createQueryRunner).not.toHaveBeenCalled();
   });
+
+  it('should process PAYMENT_PIX CANCELLED and transition Order to CANCELLED & Link to CANCELLED', async () => {
+    const order = {
+      id: 'ord-cancelled-1',
+      externalReference: 'ref-cancelled-123',
+      status: OrderStatus.PENDING,
+      checkoutLink: { id: 'link-cancelled-1', status: CheckoutLinkStatus.ACTIVE },
+    };
+
+    mockManager.findOne.mockResolvedValue(order);
+
+    const event = {
+      id: 'evt-cancelled',
+      eventType: 'PAYMENT_PIX',
+      externalReference: 'ref-cancelled-123',
+      processed: false,
+      payload: {
+        event: 'PAYMENT_PIX',
+        data: {
+          externalReference: 'ref-cancelled-123',
+          status: 'CANCELLED',
+        },
+      },
+    } as unknown as WebhookEvent;
+
+    const result = await service.processEvent(event);
+    expect(result).toBe(true);
+    expect(order.status).toBe(OrderStatus.CANCELLED);
+    expect(order.checkoutLink.status).toBe(CheckoutLinkStatus.CANCELLED);
+  });
+
+  it('should preserve terminal state (APPROVED) and ignore late conflicting status updates', async () => {
+    const order = {
+      id: 'ord-terminal-1',
+      externalReference: 'ref-terminal-123',
+      status: OrderStatus.APPROVED,
+      checkoutLink: { id: 'link-terminal-1', status: CheckoutLinkStatus.PAID },
+    };
+
+    mockManager.findOne.mockResolvedValue(order);
+
+    const event = {
+      id: 'evt-late',
+      eventType: 'PAYMENT_PIX',
+      externalReference: 'ref-terminal-123',
+      processed: false,
+      payload: {
+        event: 'PAYMENT_PIX',
+        data: {
+          externalReference: 'ref-terminal-123',
+          status: 'DENIED', // Late update attempting to deny an already approved order
+        },
+      },
+    } as unknown as WebhookEvent;
+
+    const result = await service.processEvent(event);
+    expect(result).toBe(true);
+    expect(order.status).toBe(OrderStatus.APPROVED); // Should remain APPROVED
+    expect(order.checkoutLink.status).toBe(CheckoutLinkStatus.PAID); // Should remain PAID
+  });
 });
