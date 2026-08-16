@@ -141,4 +141,31 @@ describe('CardPaymentService', () => {
       }),
     ).rejects.toThrow(BadRequestException);
   });
+
+  it('should reject payment if there is an existing PENDING order', async () => {
+    mockLinkRepo.findOne.mockResolvedValue({
+      id: 'link-card',
+      slug: 'chk_card',
+      amountCents: 10000,
+      status: CheckoutLinkStatus.ACTIVE,
+      merchantId: 'm1',
+    });
+
+    mockOrderRepo.findOne.mockResolvedValue({
+      id: 'existing-order',
+      status: OrderStatus.PENDING,
+    });
+
+    await expect(
+      service.processCardPayment('chk_card', {
+        cardNumber: '4111111111111111',
+        cardHolderName: 'Carlos Silva',
+        cardExpirationMonth: '12',
+        cardExpirationYear: '28',
+        cardCvv: '123',
+        installments: 2,
+        feePercent: 3.49,
+      }),
+    ).rejects.toThrow(BadRequestException);
+  });
 });

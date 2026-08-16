@@ -114,4 +114,23 @@ describe('PixPaymentService', () => {
       service.processPixPayment('chk_paid', {}),
     ).rejects.toThrow(BadRequestException);
   });
+
+  it('should reject payment if there is an existing PENDING order', async () => {
+    mockLinkRepo.findOne.mockResolvedValue({
+      id: 'link-1',
+      slug: 'chk_pix',
+      amountCents: 5000,
+      status: CheckoutLinkStatus.ACTIVE,
+      merchantId: 'm1',
+    });
+
+    mockOrderRepo.findOne.mockResolvedValue({
+      id: 'existing-order',
+      status: OrderStatus.PENDING,
+    });
+
+    await expect(
+      service.processPixPayment('chk_pix', {}),
+    ).rejects.toThrow(BadRequestException);
+  });
 });

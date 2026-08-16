@@ -7,7 +7,8 @@ import { LeraBoxGatewayClient } from '../gateway/gateway.client';
 describe('WalletService', () => {
   let service: WalletService;
   let mockGatewayClient: { getWallet: jest.Mock };
-  let mockOrderRepo: Record<string, jest.Mock>;
+  let mockOrderRepo: Record<string, any>;
+  let mockQueryBuilder: any;
 
   beforeEach(async () => {
     mockGatewayClient = {
@@ -17,27 +18,29 @@ describe('WalletService', () => {
       }),
     };
 
+    mockQueryBuilder = {
+      leftJoinAndSelect: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      orderBy: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      take: jest.fn().mockReturnThis(),
+      getMany: jest.fn().mockResolvedValue([
+        {
+          id: 'ord-1',
+          externalReference: 'ext-1',
+          paymentMethod: 'PIX',
+          amountCents: 5000,
+          status: 'APPROVED',
+          feePercent: 0,
+          installments: 1,
+          createdAt: new Date(),
+        },
+      ]),
+    };
+
     mockOrderRepo = {
       find: jest.fn(),
-      createQueryBuilder: jest.fn().mockReturnValue({
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        take: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([
-          {
-            id: 'ord-1',
-            externalReference: 'ext-1',
-            paymentMethod: 'PIX',
-            amountCents: 5000,
-            status: 'APPROVED',
-            feePercent: 0,
-            installments: 1,
-            createdAt: new Date(),
-          },
-        ]),
-      }),
+      createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -68,5 +71,9 @@ describe('WalletService', () => {
     expect(items).toHaveLength(1);
     expect(items[0].status).toBe('APPROVED');
     expect(items[0].amountCents).toBe(5000);
+    expect(mockQueryBuilder.where).toHaveBeenCalledWith(
+      'order.merchantId = :merchantId',
+      { merchantId: 'merchant-123' },
+    );
   });
 });
