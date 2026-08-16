@@ -8,14 +8,32 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   const corsOrigins = process.env.CORS_ALLOWED_ORIGINS;
-  const isProd = process.env.NODE_ENV === 'production';
+  const allowedOriginsList = corsOrigins
+    ? corsOrigins
+      .split(',')
+      .map((o) => o.trim())
+      .filter(Boolean)
+    : [];
 
   app.enableCors({
-    origin: isProd
-      ? (corsOrigins ? corsOrigins.split(',').map((o) => o.trim()) : [])
-      : '*',
+    origin:
+      allowedOriginsList.length > 0
+        ? (origin, callback) => {
+          if (
+            !origin ||
+            allowedOriginsList.includes(origin) ||
+            allowedOriginsList.includes('*')
+          ) {
+            callback(null, true);
+          } else {
+            callback(null, false);
+          }
+        }
+        : true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: '*',
+    allowedHeaders:
+      'Content-Type,Accept,Authorization,X-Requested-With,X-Correlation-Id,x-lera-box-signature,*',
+    credentials: true,
   });
 
   app.useGlobalPipes(
