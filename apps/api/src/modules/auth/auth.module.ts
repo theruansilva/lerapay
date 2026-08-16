@@ -7,6 +7,7 @@ import { User } from '../../database/entities';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import { GatewayModule } from '../gateway/gateway.module';
 
 @Module({
   imports: [
@@ -22,9 +23,10 @@ import { JwtStrategy } from './jwt.strategy';
         },
       }),
     }),
+    GatewayModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService, JwtStrategy, PassportModule],
 })
-export class AuthModule {}
+export class AuthModule { }

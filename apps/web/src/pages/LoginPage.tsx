@@ -38,9 +38,9 @@ export function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black px-4 relative overflow-hidden font-sans">
       {/* Glow effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#958BC2]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-primary/15 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-md w-full bg-[#141414] border border-[#2A2A2A] rounded-3xl p-8 sm:p-10 shadow-2xl text-white relative z-10">
+      <div className="max-w-md w-full bg-brand-surface border border-brand-border-card rounded-3xl p-8 sm:p-10 shadow-2xl text-white relative z-10">
         <div className="text-center mb-8">
           <a href="/" className="inline-block hover:opacity-90 transition-opacity">
             <img src="/assets/logo.png" alt="Lera Pay" className="h-10 mx-auto object-contain mb-3" />
@@ -70,7 +70,7 @@ export function LoginPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#958BC2] transition-colors"
+                  className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-brand-primary transition-colors"
                   placeholder="Nome do seu negócio"
                 />
               </div>
@@ -86,7 +86,7 @@ export function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#958BC2] transition-colors"
+                className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-brand-primary transition-colors"
                 placeholder="seu@email.com"
               />
             </div>
@@ -101,7 +101,7 @@ export function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#958BC2] transition-colors"
+                className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-brand-primary transition-colors"
                 placeholder="••••••••"
               />
             </div>
@@ -110,7 +110,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#958BC2] hover:bg-[#7a6fa8] text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-[#958BC2]/30 disabled:opacity-50 mt-6 text-sm"
+            className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-brand-primary/30 disabled:opacity-50 mt-6 text-sm"
           >
             {loading ? 'Processando...' : isRegister ? 'Cadastrar e Acessar' : 'Entrar no Painel'}
           </button>
@@ -120,7 +120,7 @@ export function LoginPage() {
           <button
             type="button"
             onClick={() => setIsRegister(!isRegister)}
-            className="text-xs text-slate-400 hover:text-[#958BC2] transition"
+            className="text-xs text-slate-400 hover:text-brand-primary transition"
           >
             {isRegister ? 'Já possui uma conta? Entrar' : 'Não tem conta? Cadastre-se'}
           </button>

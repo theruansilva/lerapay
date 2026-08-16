@@ -261,4 +261,35 @@ export class LeraBoxGatewayClient {
       data: payload,
     });
   }
+
+  async registerGatewayUser(payload: {
+    name: string;
+    email: string;
+    phone: string;
+    document: string;
+    password: string;
+    type?: 'PF' | 'PJ';
+  }): Promise<{ message: string }> {
+    try {
+      const response = await this.http.post<{ message: string }>('/users', payload);
+      return response.data;
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Gateway registration failed';
+      this.logger.error(`Gateway user registration failed: ${message}`);
+      throw new HttpException(`Gateway registration failed: ${message}`, HttpStatus.BAD_GATEWAY);
+    }
+  }
+
+  async linkGatewayCredentials(
+    merchantId: string,
+    credentials: { document: string; gatewayPassword: string },
+  ): Promise<void> {
+    const user = await this.userRepo.findOneBy({ id: merchantId });
+    if (!user) throw new HttpException('Merchant not found', HttpStatus.NOT_FOUND);
+    user.document = credentials.document;
+    user.gatewayPassword = credentials.gatewayPassword;
+    await this.userRepo.save(user);
+    // Immediately authenticate to validate credentials and persist token + codes
+    await this.authenticate(merchantId);
+  }
 }

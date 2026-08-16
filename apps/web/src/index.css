@@ -5,8 +5,7 @@
 @layer base {
   body {
     font-family: 'Gilroy', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #000000;
-    color: #FFFFFF;
+    @apply bg-lera-black text-white;
   }
 }
 

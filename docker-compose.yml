@@ -34,6 +34,7 @@ services:
       DB_NAME: lerapay_baas
       JWT_SECRET: lerapay_production_super_secret_jwt_key_2026
       GATEWAY_API_URL: https://api.branchpay.com.br/api
+      GATEWAY_DOCUMENT: ${GATEWAY_DOCUMENT:-}
       GATEWAY_EMAIL: ${GATEWAY_EMAIL:-}
       GATEWAY_PASSWORD: ${GATEWAY_PASSWORD:-}
       GATEWAY_CLIENT_CODE: ${GATEWAY_CLIENT_CODE:-}

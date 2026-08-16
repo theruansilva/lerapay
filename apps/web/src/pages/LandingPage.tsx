@@ -150,40 +150,40 @@ export function LandingPage() {
   }, [valorVendaStr, plano, tipoVenda, quemPagaTaxa]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-[#958BC2] selection:text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-brand-primary selection:text-white flex flex-col">
 
       {/* 1. TOP TICKER / ANNOUNCEMENT BAR */}
-      <div className="bg-[#0E0E0E] border-b border-[#222222] py-2 overflow-hidden select-none text-xs md:text-sm font-medium text-slate-300">
+      <div className="bg-brand-surface-dark border-b border-brand-border-muted py-2 overflow-hidden select-none text-xs md:text-sm font-medium text-slate-300">
         <div className="flex whitespace-nowrap animate-marquee">
           <div className="flex items-center gap-8 px-4">
             <span>Aqui você encontra um parceiro para Lucrar mais 💰</span>
-            <span className="text-[#958BC2]">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
+            <span className="text-brand-primary">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
             <span>Crédito em 12X apenas 9,28% 💸</span>
-            <span className="text-[#958BC2]">Concorra a uma maquininha SMART 🤑</span>
+            <span className="text-brand-primary">Concorra a uma maquininha SMART 🤑</span>
             <span>Participe do sorteio no nosso perfil do Instagram @lerapay</span>
             <span>•</span>
             <span>Aqui você encontra um parceiro para Lucrar mais 💰</span>
-            <span className="text-[#958BC2]">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
+            <span className="text-brand-primary">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
             <span>Crédito em 12X apenas 9,28% 💸</span>
-            <span className="text-[#958BC2]">Concorra a uma maquininha SMART 🤑</span>
+            <span className="text-brand-primary">Concorra a uma maquininha SMART 🤑</span>
           </div>
           <div className="flex items-center gap-8 px-4" aria-hidden="true">
             <span>Aqui você encontra um parceiro para Lucrar mais 💰</span>
-            <span className="text-[#958BC2]">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
+            <span className="text-brand-primary">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
             <span>Crédito em 12X apenas 9,28% 💸</span>
-            <span className="text-[#958BC2]">Concorra a uma maquininha SMART 🤑</span>
+            <span className="text-brand-primary">Concorra a uma maquininha SMART 🤑</span>
             <span>Participe do sorteio no nosso perfil do Instagram @lerapay</span>
             <span>•</span>
             <span>Aqui você encontra um parceiro para Lucrar mais 💰</span>
-            <span className="text-[#958BC2]">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
+            <span className="text-brand-primary">Receba as suas vendas em 1 dia útil com a maquininha Lera Pay 🤑</span>
             <span>Crédito em 12X apenas 9,28% 💸</span>
-            <span className="text-[#958BC2]">Concorra a uma maquininha SMART 🤑</span>
+            <span className="text-brand-primary">Concorra a uma maquininha SMART 🤑</span>
           </div>
         </div>
       </div>
 
       {/* 2. HEADER & NAVIGATION */}
-      <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-[#1E1E1E]">
+      <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-brand-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
           {/* Logo */}
@@ -204,40 +204,40 @@ export function LandingPage() {
               onMouseEnter={() => setOpenDropdown('maquininhas')}
               onMouseLeave={() => setOpenDropdown(null)}
             >
-              <button className="flex items-center gap-1.5 text-slate-200 hover:text-[#958BC2] py-2 transition-colors">
+              <button className="flex items-center gap-1.5 text-slate-200 hover:text-brand-primary py-2 transition-colors">
                 Maquininhas
                 <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
               </button>
 
               {openDropdown === 'maquininhas' && (
-                <div className="absolute top-full left-0 w-80 bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full left-0 w-80 bg-brand-surface border border-brand-border-card rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
                   <div className="space-y-3">
-                    <a href="#maquininhas" className="block p-2.5 rounded-lg hover:bg-[#222222] transition-colors">
+                    <a href="#maquininhas" className="block p-2.5 rounded-lg hover:bg-brand-surface-hover transition-colors">
                       <div className="font-semibold text-white flex items-center gap-2">
-                        <CreditCard className="w-4 h-4 text-[#958BC2]" />
+                        <CreditCard className="w-4 h-4 text-brand-primary" />
                         Maquininhas de cartão
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">Lucre mais a cada venda com as menores taxas</p>
                     </a>
-                    <a href="#solucoes" className="block p-2.5 rounded-lg hover:bg-[#222222] transition-colors">
+                    <a href="#solucoes" className="block p-2.5 rounded-lg hover:bg-brand-surface-hover transition-colors">
                       <div className="font-semibold text-white flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-[#958BC2]" />
+                        <TrendingUp className="w-4 h-4 text-brand-primary" />
                         Gestão de Vendas
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">Acompanhe o progresso do seu negócio em tempo real</p>
                     </a>
-                    <a href="#solucoes" className="block p-2.5 rounded-lg hover:bg-[#222222] transition-colors">
+                    <a href="#solucoes" className="block p-2.5 rounded-lg hover:bg-brand-surface-hover transition-colors">
                       <div className="font-semibold text-white flex items-center gap-2">
-                        <Smartphone className="w-4 h-4 text-[#958BC2]" />
+                        <Smartphone className="w-4 h-4 text-brand-primary" />
                         Lera Pay Tap
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">Transforme seu celular em maquininha!</p>
                     </a>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#2A2A2A]">
+                  <div className="mt-3 pt-3 border-t border-brand-border-card">
                     <a
                       href="#calculadora"
-                      className="block text-center text-xs font-semibold py-2 bg-[#958BC2] text-white rounded-lg hover:bg-[#7a6fa8] transition-colors"
+                      className="block text-center text-xs font-semibold py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary-hover transition-colors"
                     >
                       Peça a sua maquininha
                     </a>
@@ -252,24 +252,24 @@ export function LandingPage() {
               onMouseEnter={() => setOpenDropdown('taxas')}
               onMouseLeave={() => setOpenDropdown(null)}
             >
-              <button className="flex items-center gap-1.5 text-slate-200 hover:text-[#958BC2] py-2 transition-colors">
+              <button className="flex items-center gap-1.5 text-slate-200 hover:text-brand-primary py-2 transition-colors">
                 Taxas
                 <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
               </button>
 
               {openDropdown === 'taxas' && (
-                <div className="absolute top-full left-0 w-72 bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full left-0 w-72 bg-brand-surface border border-brand-border-card rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
                   <div className="space-y-3">
-                    <a href="#taxas" className="block p-2.5 rounded-lg hover:bg-[#222222] transition-colors">
+                    <a href="#taxas" className="block p-2.5 rounded-lg hover:bg-brand-surface-hover transition-colors">
                       <div className="font-semibold text-white flex items-center gap-2">
-                        <Percent className="w-4 h-4 text-[#958BC2]" />
+                        <Percent className="w-4 h-4 text-brand-primary" />
                         Nossas Taxas
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">Consulte as nossas taxas imbatíveis</p>
                     </a>
-                    <a href="#calculadora" className="block p-2.5 rounded-lg hover:bg-[#222222] transition-colors">
+                    <a href="#calculadora" className="block p-2.5 rounded-lg hover:bg-brand-surface-hover transition-colors">
                       <div className="font-semibold text-white flex items-center gap-2">
-                        <Calculator className="w-4 h-4 text-[#958BC2]" />
+                        <Calculator className="w-4 h-4 text-brand-primary" />
                         Calculadora de Taxas
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">Faça comparação de taxas online</p>
@@ -285,21 +285,21 @@ export function LandingPage() {
               onMouseEnter={() => setOpenDropdown('sobre')}
               onMouseLeave={() => setOpenDropdown(null)}
             >
-              <button className="flex items-center gap-1.5 text-slate-200 hover:text-[#958BC2] py-2 transition-colors">
+              <button className="flex items-center gap-1.5 text-slate-200 hover:text-brand-primary py-2 transition-colors">
                 Sobre Nós
                 <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
               </button>
 
               {openDropdown === 'sobre' && (
-                <div className="absolute top-full left-0 w-64 bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full left-0 w-64 bg-brand-surface border border-brand-border-card rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
                   <div className="space-y-2">
-                    <a href="#sobre" className="block p-2 rounded-lg hover:bg-[#222222] text-sm text-slate-200 hover:text-white transition-colors">
+                    <a href="#sobre" className="block p-2 rounded-lg hover:bg-brand-surface-hover text-sm text-slate-200 hover:text-white transition-colors">
                       Nossa História
                     </a>
-                    <a href="#blog" className="block p-2 rounded-lg hover:bg-[#222222] text-sm text-slate-200 hover:text-white transition-colors">
+                    <a href="#blog" className="block p-2 rounded-lg hover:bg-brand-surface-hover text-sm text-slate-200 hover:text-white transition-colors">
                       Blog Lera Pay
                     </a>
-                    <a href="#contato" className="block p-2 rounded-lg hover:bg-[#222222] text-sm text-slate-200 hover:text-white transition-colors">
+                    <a href="#contato" className="block p-2 rounded-lg hover:bg-brand-surface-hover text-sm text-slate-200 hover:text-white transition-colors">
                       Central de Ajuda & Dúvidas
                     </a>
                   </div>
@@ -307,11 +307,11 @@ export function LandingPage() {
               )}
             </div>
 
-            <a href="#solucoes" className="text-slate-200 hover:text-[#958BC2] transition-colors">
+            <a href="#solucoes" className="text-slate-200 hover:text-brand-primary transition-colors">
               Soluções
             </a>
 
-            <a href="#contato" className="text-slate-200 hover:text-[#958BC2] transition-colors">
+            <a href="#contato" className="text-slate-200 hover:text-brand-primary transition-colors">
               Contato
             </a>
           </nav>
@@ -320,13 +320,13 @@ export function LandingPage() {
           <div className="hidden sm:flex items-center gap-3">
             <Link
               to="/login"
-              className="px-5 py-2.5 text-sm font-semibold rounded-full border border-[#958BC2] text-[#958BC2] hover:bg-[#958BC2] hover:text-white transition-all duration-200 shadow-sm"
+              className="px-5 py-2.5 text-sm font-semibold rounded-full border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition-all duration-200 shadow-sm"
             >
               Login
             </Link>
             <Link
               to="/login"
-              className="px-5 py-2.5 text-sm font-semibold rounded-full bg-[#958BC2] text-white hover:bg-[#7a6fa8] transition-all duration-200 shadow-lg shadow-[#958BC2]/25"
+              className="px-5 py-2.5 text-sm font-semibold rounded-full bg-brand-primary text-white hover:bg-brand-primary-hover transition-all duration-200 shadow-lg shadow-brand-primary/25"
             >
               Cadastre-se
             </Link>
@@ -335,7 +335,7 @@ export function LandingPage() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-[#1E1E1E] transition-colors"
+            className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-brand-border-subtle transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -344,69 +344,69 @@ export function LandingPage() {
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#111111] border-b border-[#2A2A2A] px-6 py-6 space-y-4">
+          <div className="lg:hidden bg-brand-surface-dark border-b border-brand-border-card px-6 py-6 space-y-4">
             <div className="space-y-3">
               <a
                 href="#maquininhas"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Maquininhas
               </a>
               <a
                 href="#taxas"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Nossas Taxas
               </a>
               <a
                 href="#calculadora"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Simulador de Taxas
               </a>
               <a
                 href="#sobre"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Sobre Nós
               </a>
               <a
                 href="#solucoes"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Soluções
               </a>
               <a
                 href="#blog"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Blog
               </a>
               <a
                 href="#contato"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-base font-medium text-slate-200 hover:text-[#958BC2]"
+                className="block text-base font-medium text-slate-200 hover:text-brand-primary"
               >
                 Contato
               </a>
             </div>
 
-            <div className="pt-4 border-t border-[#262626] flex flex-col gap-3">
+            <div className="pt-4 border-t border-brand-border flex flex-col gap-3">
               <Link
                 to="/login"
-                className="w-full text-center py-2.5 font-semibold text-sm rounded-xl border border-[#958BC2] text-[#958BC2]"
+                className="w-full text-center py-2.5 font-semibold text-sm rounded-xl border border-brand-primary text-brand-primary"
               >
                 Login
               </Link>
               <Link
                 to="/login"
-                className="w-full text-center py-2.5 font-semibold text-sm rounded-xl bg-[#958BC2] text-white"
+                className="w-full text-center py-2.5 font-semibold text-sm rounded-xl bg-brand-primary text-white"
               >
                 Cadastre-se
               </Link>
@@ -418,26 +418,26 @@ export function LandingPage() {
       {/* 3. HERO SECTION */}
       <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
         {/* Background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#958BC2]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-primary/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B1B1B] border border-[#2E2E2E] text-xs font-semibold text-[#958BC2]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-surface-card border border-brand-border-card text-xs font-semibold text-brand-primary">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Taxas Justas e Acessíveis para Todo Tipo de Negócio</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
                 Maquininha com melhor taxa para seu negócio{' '}
-                <span className="text-[#958BC2]">Lucrar mais</span>
+                <span className="text-brand-primary">Lucrar mais</span>
               </h1>
 
               {/* Rate Highlight Card */}
-              <div className="inline-block bg-[#161616] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-left max-w-md w-full">
-                <div className="text-xs font-bold uppercase tracking-widest text-[#958BC2]">
+              <div className="inline-block bg-brand-surface-elevated border border-brand-border-card rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-left max-w-md w-full">
+                <div className="text-xs font-bold uppercase tracking-widest text-brand-primary">
                   CRÉDITO EM 10X
                 </div>
                 <div className="text-5xl sm:text-6xl font-black text-white mt-1 tracking-tight">
@@ -452,7 +452,7 @@ export function LandingPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <a
                   href="#calculadora"
-                  className="w-full sm:w-auto px-8 py-4 bg-[#958BC2] text-white font-bold rounded-full hover:bg-[#7a6fa8] transition-all transform hover:scale-105 shadow-xl shadow-[#958BC2]/30 flex items-center justify-center gap-2 text-base"
+                  className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-primary-hover transition-all transform hover:scale-105 shadow-xl shadow-brand-primary/30 flex items-center justify-center gap-2 text-base"
                 >
                   <span>PEDIR MAQUININHA</span>
                   <ArrowRight className="w-5 h-5" />
@@ -482,13 +482,13 @@ export function LandingPage() {
       </section>
 
       {/* 4. TRUST & BENEFIT PILLARS STRIP */}
-      <section className="bg-[#121212] border-y border-[#222222] py-8">
+      <section className="bg-brand-surface-dark border-y border-brand-border-muted py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1A1A1A]/60 border border-[#282828]">
-              <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center shrink-0">
-                <TrendingUp className="w-6 h-6 text-[#958BC2]" />
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-brand-surface-secondary/60 border border-brand-border">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center shrink-0">
+                <TrendingUp className="w-6 h-6 text-brand-primary" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white">Desempenho superior</h4>
@@ -496,17 +496,17 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1A1A1A]/60 border border-[#282828]">
-              <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center shrink-0">
-                <Globe className="w-6 h-6 text-[#958BC2]" />
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-brand-surface-secondary/60 border border-brand-border">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center shrink-0">
+                <Globe className="w-6 h-6 text-brand-primary" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white">PRESENÇA EM TODO</h4>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-bold text-[#958BC2]">BRASIL</p>
+                <p className="text-xs text-slate-400 uppercase tracking-wider font-bold text-brand-primary">BRASIL</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1A1A1A]/60 border border-[#282828]">
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-brand-surface-secondary/60 border border-brand-border">
               <div className="flex items-center gap-2 shrink-0">
                 <img src="/assets/otimo.svg" alt="Ótimo" className="h-8 w-auto" />
                 <img src="/assets/reclame-aqui-logo.svg" alt="Reclame Aqui" className="h-7 w-auto" />
@@ -517,9 +517,9 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1A1A1A]/60 border border-[#282828]">
-              <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-[#958BC2]" />
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-brand-surface-secondary/60 border border-brand-border">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center shrink-0">
+                <Zap className="w-6 h-6 text-brand-primary" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white">Frete Grátis</h4>
@@ -535,11 +535,11 @@ export function LandingPage() {
       <section id="taxas" className="py-20 bg-black relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
-            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#958BC2] bg-[#958BC2]/10 px-4 py-1 rounded-full border border-[#958BC2]/30">
+            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-brand-primary bg-brand-primary/10 px-4 py-1 rounded-full border border-brand-primary/30">
               NOSSAS TAXAS
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">
-              Receba suas vendas em <span className="text-[#958BC2]">1 dia útil</span>
+              Receba suas vendas em <span className="text-brand-primary">1 dia útil</span>
             </h2>
             <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
               Sem pegadinhas, sem letras miúdas. As melhores taxas para alavancar os lucros do seu comércio ou serviço.
@@ -549,7 +549,7 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
             {/* Card 1: Débito */}
-            <div className="bg-[#141414] border border-[#262626] rounded-3xl p-8 text-center hover:border-[#958BC2] transition-all hover:scale-105 shadow-xl">
+            <div className="bg-brand-surface border border-brand-border rounded-3xl p-8 text-center hover:border-brand-primary transition-all hover:scale-105 shadow-xl">
               <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
                 VENDAS NO DÉBITO
               </span>
@@ -560,21 +560,21 @@ export function LandingPage() {
             </div>
 
             {/* Card 2: Crédito à vista */}
-            <div className="bg-[#181818] border-2 border-[#958BC2] rounded-3xl p-8 text-center relative hover:scale-105 transition-all shadow-2xl shadow-[#958BC2]/20">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#958BC2] text-white text-[11px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-full">
+            <div className="bg-brand-surface-highlight border-2 border-brand-primary rounded-3xl p-8 text-center relative hover:scale-105 transition-all shadow-2xl shadow-brand-primary/20">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-primary text-white text-[11px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-full">
                 MAIS POPULAR
               </div>
               <span className="text-xs font-extrabold uppercase tracking-wider text-slate-300">
                 CRÉDITO À VISTA
               </span>
               <div className="my-6">
-                <span className="text-5xl lg:text-6xl font-black text-[#958BC2]">3,28%</span>
+                <span className="text-5xl lg:text-6xl font-black text-brand-primary">3,28%</span>
               </div>
               <p className="text-xs text-slate-400">Dinheiro na mão em 1 dia útil para girar seu estoque</p>
             </div>
 
             {/* Card 3: Crédito 10x */}
-            <div className="bg-[#141414] border border-[#262626] rounded-3xl p-8 text-center hover:border-[#958BC2] transition-all hover:scale-105 shadow-xl">
+            <div className="bg-brand-surface border border-brand-border rounded-3xl p-8 text-center hover:border-brand-primary transition-all hover:scale-105 shadow-xl">
               <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
                 CRÉDITO EM 10X
               </span>
@@ -589,7 +589,7 @@ export function LandingPage() {
           <div className="mt-12 text-center">
             <a
               href="#calculadora"
-              className="inline-flex items-center gap-2 text-sm font-bold text-[#958BC2] hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-bold text-brand-primary hover:text-white transition-colors"
             >
               <span>VER TODAS AS TAXAS NA CALCULADORA</span>
               <ChevronRight className="w-4 h-4" />
@@ -599,11 +599,11 @@ export function LandingPage() {
       </section>
 
       {/* 6. INTERACTIVE RATE SIMULATOR / CALCULADORA DE TAXAS */}
-      <section id="calculadora" className="py-20 bg-[#0A0A0A] border-t border-[#1C1C1C]">
+      <section id="calculadora" className="py-20 bg-brand-surface-base border-t border-brand-border-subtle">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center space-y-3 mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#958BC2]">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-primary">
               Simulador de Taxas
             </h2>
             <p className="text-xl text-white font-medium">
@@ -611,7 +611,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="bg-[#141414] border border-[#282828] rounded-3xl p-6 sm:p-10 shadow-2xl">
+          <div className="bg-brand-surface border border-brand-border rounded-3xl p-6 sm:p-10 shadow-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
               {/* Form Input Column */}
@@ -627,8 +627,8 @@ export function LandingPage() {
                       type="button"
                       onClick={() => handlePlanoChange('com_antecipacao')}
                       className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${plano === 'com_antecipacao'
-                          ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
-                          : 'bg-[#202020] text-slate-300 border border-[#333333] hover:border-[#958BC2]'
+                          ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30'
+                          : 'bg-brand-surface-hover text-slate-300 border border-brand-border-input hover:border-brand-primary'
                         }`}
                     >
                       Com Antecipação
@@ -637,8 +637,8 @@ export function LandingPage() {
                       type="button"
                       onClick={() => handlePlanoChange('sem_antecipacao')}
                       className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${plano === 'sem_antecipacao'
-                          ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
-                          : 'bg-[#202020] text-slate-300 border border-[#333333] hover:border-[#958BC2]'
+                          ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30'
+                          : 'bg-brand-surface-hover text-slate-300 border border-brand-border-input hover:border-brand-primary'
                         }`}
                     >
                       Sem Antecipação
@@ -655,7 +655,7 @@ export function LandingPage() {
                     <select
                       value={tipoVenda}
                       onChange={(e) => setTipoVenda(e.target.value)}
-                      className="w-full bg-[#1F1F1F] border border-[#3A3A3A] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2]"
+                      className="w-full bg-brand-surface-input border border-brand-border-strong rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary"
                     >
                       {availableInstallments.map((key) => (
                         <option key={key} value={key}>
@@ -673,7 +673,7 @@ export function LandingPage() {
                       type="text"
                       value={valorVendaStr}
                       onChange={handleCurrencyChange}
-                      className="w-full bg-[#1F1F1F] border border-[#3A3A3A] rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-[#958BC2]"
+                      className="w-full bg-brand-surface-input border border-brand-border-strong rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-brand-primary"
                       placeholder="1.000,00"
                     />
                   </div>
@@ -687,7 +687,7 @@ export function LandingPage() {
                   <select
                     value={quemPagaTaxa}
                     onChange={(e) => setQuemPagaTaxa(e.target.value as 'eu' | 'cliente')}
-                    className="w-full bg-[#1F1F1F] border border-[#3A3A3A] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2]"
+                    className="w-full bg-brand-surface-input border border-brand-border-strong rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary"
                   >
                     <option value="eu">Eu (Vendedor absorve)</option>
                     <option value="cliente">Cliente (Repassar taxa)</option>
@@ -697,7 +697,7 @@ export function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setSimulou(true)}
-                  className="w-full py-3.5 bg-[#958BC2] text-white font-bold rounded-xl hover:bg-[#7a6fa8] transition-all shadow-lg shadow-[#958BC2]/30 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-brand-primary text-white font-bold rounded-xl hover:bg-brand-primary-hover transition-all shadow-lg shadow-brand-primary/30 flex items-center justify-center gap-2"
                 >
                   <Calculator className="w-4 h-4" />
                   <span>Simular Agora</span>
@@ -705,12 +705,12 @@ export function LandingPage() {
               </div>
 
               {/* Result Output Column */}
-              <div className="lg:col-span-5 bg-[#1B1B1B] border border-[#2E2E2E] rounded-2xl p-6 sm:p-8 space-y-4">
-                <div className="border-b border-[#2E2E2E] pb-4">
+              <div className="lg:col-span-5 bg-brand-surface-card border border-brand-border-card rounded-2xl p-6 sm:p-8 space-y-4">
+                <div className="border-b border-brand-border-card pb-4">
                   <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
                     Você recebe
                   </span>
-                  <div className="text-3xl sm:text-4xl font-extrabold text-[#958BC2] mt-1">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-brand-primary mt-1">
                     R$ {formatBRL(simulationResult.valorRecebido)}
                   </div>
                 </div>
@@ -733,18 +733,18 @@ export function LandingPage() {
                     </div>
                   )}
 
-                  <div className="flex justify-between text-slate-300 pt-2 border-t border-[#2A2A2A]">
+                  <div className="flex justify-between text-slate-300 pt-2 border-t border-brand-border-card">
                     <span>Valor líquido a receber:</span>
                     <strong className="text-emerald-400">R$ {formatBRL(simulationResult.valorLiquido)}</strong>
                   </div>
 
                   <div className="flex justify-between text-slate-300">
                     <span>Prazo de recebimento:</span>
-                    <strong className="text-[#958BC2]">{simulationResult.prazoRecebimento}</strong>
+                    <strong className="text-brand-primary">{simulationResult.prazoRecebimento}</strong>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#2E2E2E]">
+                <div className="pt-4 border-t border-brand-border-card">
                   <p className="text-[11px] text-slate-400 text-center">
                     Simulação com base nas tabelas vigentes. O valor final pode variar conforme o perfil e bandeira.
                   </p>
@@ -772,7 +772,7 @@ export function LandingPage() {
 
             <div className="lg:col-span-6 space-y-6">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-                Aceite as principais <span className="text-[#958BC2]">bandeiras e carteiras digitais</span>
+                Aceite as principais <span className="text-brand-primary">bandeiras e carteiras digitais</span>
               </h2>
 
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
@@ -789,19 +789,19 @@ export function LandingPage() {
 
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="flex items-center gap-2 text-sm text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-[#958BC2]" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                   <span>Pix instantâneo QR Code</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-[#958BC2]" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                   <span>Aproximação NFC</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-[#958BC2]" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                   <span>Vouchers & Benefícios</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-[#958BC2]" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                   <span>Apple Pay & Google Pay</span>
                 </div>
               </div>
@@ -812,12 +812,12 @@ export function LandingPage() {
       </section>
 
       {/* 8. SECURITY & PCI DSS SECTION */}
-      <section className="py-16 bg-[#0E0E0E] border-y border-[#202020]">
+      <section className="py-16 bg-brand-surface-dark border-y border-brand-border-muted">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-[#161616] border border-[#2B2B2B] rounded-3xl p-8 sm:p-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-brand-surface-elevated border border-brand-border-card rounded-3xl p-8 sm:p-12">
 
             <div className="space-y-4 max-w-2xl">
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-[#958BC2] uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-primary uppercase tracking-wider">
                 <ShieldCheck className="w-4 h-4" />
                 <span>SEGURANÇA DE NÍVEL BANCÁRIO</span>
               </div>
@@ -847,7 +847,7 @@ export function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
             <div className="lg:col-span-6 space-y-6">
-              <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#958BC2] bg-[#958BC2]/10 px-4 py-1 rounded-full border border-[#958BC2]/30">
+              <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-brand-primary bg-brand-primary/10 px-4 py-1 rounded-full border border-brand-primary/30">
                 SOBRE NÓS
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
@@ -863,7 +863,7 @@ export function LandingPage() {
               <div className="pt-2">
                 <a
                   href="#calculadora"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#958BC2] text-white font-bold rounded-full hover:bg-[#7a6fa8] transition-colors text-sm"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-primary-hover transition-colors text-sm"
                 >
                   <span>Conhecer a Lera Pay</span>
                   <ArrowRight className="w-4 h-4" />
@@ -884,11 +884,11 @@ export function LandingPage() {
       </section>
 
       {/* 10. MAQUININHAS SHOWCASE GRID */}
-      <section id="maquininhas" className="py-20 bg-[#0A0A0A] border-t border-[#1C1C1C]">
+      <section id="maquininhas" className="py-20 bg-brand-surface-base border-t border-brand-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center space-y-4 mb-16">
-            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#958BC2] bg-[#958BC2]/10 px-4 py-1 rounded-full border border-[#958BC2]/30">
+            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-brand-primary bg-brand-primary/10 px-4 py-1 rounded-full border border-brand-primary/30">
               EQUIPAMENTOS DE PONTA
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
@@ -902,7 +902,7 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             {/* Machine 1: Lera Smart */}
-            <div className="bg-[#141414] border border-[#282828] rounded-3xl p-8 flex flex-col items-center text-center hover:border-[#958BC2] transition-all hover:scale-105 group shadow-xl">
+            <div className="bg-brand-surface border border-brand-border rounded-3xl p-8 flex flex-col items-center text-center hover:border-brand-primary transition-all hover:scale-105 group shadow-xl">
               <div className="h-56 w-full flex items-center justify-center p-4">
                 <img
                   src="/assets/leraSmart.png"
@@ -916,14 +916,14 @@ export function LandingPage() {
               </p>
               <a
                 href="#calculadora"
-                className="mt-auto w-full py-2.5 bg-[#1F1F1F] text-white font-semibold rounded-xl hover:bg-[#958BC2] transition-colors text-sm"
+                className="mt-auto w-full py-2.5 bg-brand-surface-input text-white font-semibold rounded-xl hover:bg-brand-primary transition-colors text-sm"
               >
                 Pedir Lera Smart
               </a>
             </div>
 
             {/* Machine 2: Lera Pro */}
-            <div className="bg-[#141414] border border-[#282828] rounded-3xl p-8 flex flex-col items-center text-center hover:border-[#958BC2] transition-all hover:scale-105 group shadow-xl">
+            <div className="bg-brand-surface border border-brand-border rounded-3xl p-8 flex flex-col items-center text-center hover:border-brand-primary transition-all hover:scale-105 group shadow-xl">
               <div className="h-56 w-full flex items-center justify-center p-4">
                 <img
                   src="/assets/leraPro.png"
@@ -937,14 +937,14 @@ export function LandingPage() {
               </p>
               <a
                 href="#calculadora"
-                className="mt-auto w-full py-2.5 bg-[#1F1F1F] text-white font-semibold rounded-xl hover:bg-[#958BC2] transition-colors text-sm"
+                className="mt-auto w-full py-2.5 bg-brand-surface-input text-white font-semibold rounded-xl hover:bg-brand-primary transition-colors text-sm"
               >
                 Pedir Lera Pro
               </a>
             </div>
 
             {/* Machine 3: Lera P2 */}
-            <div className="bg-[#141414] border border-[#282828] rounded-3xl p-8 flex flex-col items-center text-center hover:border-[#958BC2] transition-all hover:scale-105 group shadow-xl">
+            <div className="bg-brand-surface border border-brand-border rounded-3xl p-8 flex flex-col items-center text-center hover:border-brand-primary transition-all hover:scale-105 group shadow-xl">
               <div className="h-56 w-full flex items-center justify-center p-4">
                 <img
                   src="/assets/p2.png"
@@ -958,7 +958,7 @@ export function LandingPage() {
               </p>
               <a
                 href="#calculadora"
-                className="mt-auto w-full py-2.5 bg-[#1F1F1F] text-white font-semibold rounded-xl hover:bg-[#958BC2] transition-colors text-sm"
+                className="mt-auto w-full py-2.5 bg-brand-surface-input text-white font-semibold rounded-xl hover:bg-brand-primary transition-colors text-sm"
               >
                 Pedir Lera P2
               </a>
@@ -974,7 +974,7 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center space-y-4 mb-16">
-            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#958BC2] bg-[#958BC2]/10 px-4 py-1 rounded-full border border-[#958BC2]/30">
+            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-brand-primary bg-brand-primary/10 px-4 py-1 rounded-full border border-brand-primary/30">
               ECOSSISTEMA COMPLETO
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
@@ -984,10 +984,10 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <div className="bg-[#141414] border border-[#282828] rounded-2xl p-6 hover:border-[#958BC2] transition-all hover:-translate-y-1 flex flex-col justify-between">
+            <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 hover:border-brand-primary transition-all hover:-translate-y-1 flex flex-col justify-between">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center mb-4">
-                  <CreditCard className="w-6 h-6 text-[#958BC2]" />
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center mb-4">
+                  <CreditCard className="w-6 h-6 text-brand-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
                   Maquininhas com as melhores taxas
@@ -998,17 +998,17 @@ export function LandingPage() {
               </div>
               <a
                 href="#maquininhas"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#958BC2] hover:text-white mt-6 pt-4 border-t border-[#262626]"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:text-white mt-6 pt-4 border-t border-brand-border"
               >
                 <span>VER MAIS</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
 
-            <div className="bg-[#141414] border border-[#282828] rounded-2xl p-6 hover:border-[#958BC2] transition-all hover:-translate-y-1 flex flex-col justify-between">
+            <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 hover:border-brand-primary transition-all hover:-translate-y-1 flex flex-col justify-between">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center mb-4">
-                  <TrendingUp className="w-6 h-6 text-[#958BC2]" />
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-brand-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
                   Conta Digital Completa
@@ -1019,17 +1019,17 @@ export function LandingPage() {
               </div>
               <Link
                 to="/login"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#958BC2] hover:text-white mt-6 pt-4 border-t border-[#262626]"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:text-white mt-6 pt-4 border-t border-brand-border"
               >
                 <span>ACESSAR CONTA</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            <div className="bg-[#141414] border border-[#282828] rounded-2xl p-6 hover:border-[#958BC2] transition-all hover:-translate-y-1 flex flex-col justify-between">
+            <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 hover:border-brand-primary transition-all hover:-translate-y-1 flex flex-col justify-between">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center mb-4">
-                  <Globe className="w-6 h-6 text-[#958BC2]" />
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center mb-4">
+                  <Globe className="w-6 h-6 text-brand-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
                   Link de Pagamento
@@ -1040,17 +1040,17 @@ export function LandingPage() {
               </div>
               <Link
                 to="/login"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#958BC2] hover:text-white mt-6 pt-4 border-t border-[#262626]"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:text-white mt-6 pt-4 border-t border-brand-border"
               >
                 <span>CRIAR LINK</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            <div className="bg-[#141414] border border-[#282828] rounded-2xl p-6 hover:border-[#958BC2] transition-all hover:-translate-y-1 flex flex-col justify-between">
+            <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 hover:border-brand-primary transition-all hover:-translate-y-1 flex flex-col justify-between">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#958BC2]/10 border border-[#958BC2]/30 flex items-center justify-center mb-4">
-                  <Smartphone className="w-6 h-6 text-[#958BC2]" />
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center mb-4">
+                  <Smartphone className="w-6 h-6 text-brand-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">
                   Lera Pay Tap
@@ -1061,7 +1061,7 @@ export function LandingPage() {
               </div>
               <a
                 href="#calculadora"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#958BC2] hover:text-white mt-6 pt-4 border-t border-[#262626]"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:text-white mt-6 pt-4 border-t border-brand-border"
               >
                 <span>CONHECER TAP</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -1074,12 +1074,12 @@ export function LandingPage() {
       </section>
 
       {/* 12. BLOG & ARTICLES */}
-      <section id="blog" className="py-20 bg-[#0E0E0E] border-t border-[#1F1F1F]">
+      <section id="blog" className="py-20 bg-brand-surface-dark border-t border-brand-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#958BC2]">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-brand-primary">
                 BLOG & NOVIDADES
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
@@ -1088,7 +1088,7 @@ export function LandingPage() {
             </div>
             <a
               href="#calculadora"
-              className="inline-flex items-center gap-1.5 text-sm font-bold text-[#958BC2] hover:text-white"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-primary hover:text-white"
             >
               <span>Ver todos os artigos</span>
               <ChevronRight className="w-4 h-4" />
@@ -1097,52 +1097,52 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            <div className="bg-[#161616] border border-[#2A2A2A] rounded-2xl overflow-hidden group hover:border-[#958BC2] transition-all">
+            <div className="bg-brand-surface-elevated border border-brand-border-card rounded-2xl overflow-hidden group hover:border-brand-primary transition-all">
               <div className="h-60 overflow-hidden relative">
                 <img
                   src="/assets/maquininhas.jpg"
                   alt="Melhor maquininha de cartão em 2025"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-[#958BC2] text-xs font-bold px-3 py-1 rounded-full">
+                <span className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-brand-primary text-xs font-bold px-3 py-1 rounded-full">
                   Guia do Comerciante
                 </span>
               </div>
               <div className="p-6 space-y-3">
-                <h3 className="text-xl font-bold text-white group-hover:text-[#958BC2] transition-colors">
+                <h3 className="text-xl font-bold text-white group-hover:text-brand-primary transition-colors">
                   Melhor maquininha de cartão em 2025: Descubra a Opção Ideal para o Seu Negócio
                 </h3>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   Confira o comparativo de taxas, bateria, conectividade e prazo de recebimento para escolher a parceira ideal.
                 </p>
                 <div className="pt-2">
-                  <span className="text-xs font-bold text-[#958BC2] flex items-center gap-1">
+                  <span className="text-xs font-bold text-brand-primary flex items-center gap-1">
                     LER ARTIGO COMPLETO <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#161616] border border-[#2A2A2A] rounded-2xl overflow-hidden group hover:border-[#958BC2] transition-all">
+            <div className="bg-brand-surface-elevated border border-brand-border-card rounded-2xl overflow-hidden group hover:border-brand-primary transition-all">
               <div className="h-60 overflow-hidden relative">
                 <img
                   src="/assets/mulherComMaquininha.png"
                   alt="Maquininha Smart Lera Pay"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-[#958BC2] text-xs font-bold px-3 py-1 rounded-full">
+                <span className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-brand-primary text-xs font-bold px-3 py-1 rounded-full">
                   Tecnologia & Pagamentos
                 </span>
               </div>
               <div className="p-6 space-y-3">
-                <h3 className="text-xl font-bold text-white group-hover:text-[#958BC2] transition-colors">
+                <h3 className="text-xl font-bold text-white group-hover:text-brand-primary transition-colors">
                   Maquininha Smart Lera Pay: A Solução Completa para o Seu Negócio
                 </h3>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   Descubra como o sistema Android integrado e a impressão de comprovante aumentam a agilidade no balcão.
                 </p>
                 <div className="pt-2">
-                  <span className="text-xs font-bold text-[#958BC2] flex items-center gap-1">
+                  <span className="text-xs font-bold text-brand-primary flex items-center gap-1">
                     LER ARTIGO COMPLETO <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
@@ -1155,7 +1155,7 @@ export function LandingPage() {
       </section>
 
       {/* 13. LICENCIADO CTA BANNER */}
-      <section className="bg-gradient-to-r from-[#958BC2] to-[#675c91] py-12 text-white">
+      <section className="bg-gradient-to-r from-brand-primary to-brand-primary-dark py-12 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           <div>
             <h3 className="text-2xl sm:text-3xl font-extrabold">Seja um Licenciado Lera Pay</h3>
@@ -1175,7 +1175,7 @@ export function LandingPage() {
       </section>
 
       {/* 14. FOOTER */}
-      <footer id="contato" className="bg-[#080808] border-t border-[#1F1F1F] pt-16 pb-12 text-slate-400 text-xs">
+      <footer id="contato" className="bg-black border-t border-brand-border-subtle pt-16 pb-12 text-slate-400 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
@@ -1224,11 +1224,11 @@ export function LandingPage() {
               </h4>
               <ul className="space-y-2">
                 <li className="flex items-center gap-1.5 text-slate-300">
-                  <Clock className="w-3.5 h-3.5 text-[#958BC2]" />
+                  <Clock className="w-3.5 h-3.5 text-brand-primary" />
                   <span>Seg a Sex: 8h às 18h</span>
                 </li>
                 <li className="flex items-center gap-1.5 text-slate-300">
-                  <Phone className="w-3.5 h-3.5 text-[#958BC2]" />
+                  <Phone className="w-3.5 h-3.5 text-brand-primary" />
                   <a href="tel:11963130590" className="hover:text-white">(11) 96313-0590</a>
                 </li>
                 <li>
@@ -1236,7 +1236,7 @@ export function LandingPage() {
                     href="https://api.whatsapp.com/send?phone=5511963130590"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[#958BC2] hover:underline font-semibold flex items-center gap-1 mt-1"
+                    className="text-brand-primary hover:underline font-semibold flex items-center gap-1 mt-1"
                   >
                     Suporte WhatsApp
                   </a>
@@ -1268,13 +1268,13 @@ export function LandingPage() {
               <div className="space-y-3">
                 <Link
                   to="/login"
-                  className="block text-center py-2 px-3 bg-[#958BC2] text-white font-bold rounded-lg hover:bg-[#7a6fa8] transition-colors text-xs"
+                  className="block text-center py-2 px-3 bg-brand-primary text-white font-bold rounded-lg hover:bg-brand-primary-hover transition-colors text-xs"
                 >
                   Acessar Conta
                 </Link>
                 <Link
                   to="/login"
-                  className="block text-center py-2 px-3 bg-[#1A1A1A] border border-[#333] text-slate-200 font-semibold rounded-lg hover:bg-[#222] transition-colors text-xs"
+                  className="block text-center py-2 px-3 bg-brand-surface-secondary border border-brand-border-input text-slate-200 font-semibold rounded-lg hover:bg-brand-surface-hover transition-colors text-xs"
                 >
                   Criar Conta
                 </Link>
@@ -1283,7 +1283,7 @@ export function LandingPage() {
 
           </div>
 
-          <div className="pt-8 border-t border-[#1C1C1C] flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="pt-8 border-t border-brand-border-subtle flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img src="/assets/logo.png" alt="Lera Pay" className="h-6 w-auto opacity-75" />
               <span className="text-[11px] text-slate-500">

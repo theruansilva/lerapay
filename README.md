@@ -121,17 +121,21 @@ Para acessar o Dashboard do Lojista:
 Acesse a documentação interativa completa em:
 👉 **[http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
 
-### Principais Rotas:
 - `POST /api/auth/register` & `POST /api/auth/login`: Autenticação do lojista.
+- `POST /api/auth/gateway/register`: Cadastra nova conta no gateway Lera Box (`POST /users`) — envia credenciais por e-mail.
+- `POST /api/auth/gateway/link` *(Bearer)*: Vincula documento + senha do gateway ao merchant, autentica e persiste token.
+- `GET /api/auth/me` *(Bearer)*: Perfil do lojista com `gatewayClientCode` e `gatewayStoreKey`.
 - `GET /api/fees` & `GET /api/fees/calculate`: Consulta de taxas e cálculo dinâmico de parcelas.
-- `POST /api/checkout/links`: Criação de links de checkout com slug único e valor em centavos.
+- `POST /api/checkout/links` *(Bearer)*: Criação de links de checkout com slug único e valor em centavos.
 - `GET /api/checkout/links/:slug`: Consulta pública do link para o checkout.
 - `POST /api/checkout/pay/:slug/pix`: Geração de QR Code e EMV Pix.
 - `POST /api/checkout/pay/:slug/card`: Processamento de pagamento via Cartão com validação de taxas.
-- `GET /api/wallet`: Saldo disponível na carteira sincronizado com o gateway.
-- `GET /api/wallet/transactions`: Extrato financeiro com filtros por status (`APPROVED`, `DENIED`, `EXPIRED`, `CANCELLED`).
-- `POST /api/wallet/withdrawals`: Solicitação de saque Pix.
+- `GET /api/wallet` *(Bearer)*: Saldo disponível na carteira sincronizado com o gateway.
+- `GET /api/wallet/transactions` *(Bearer)*: Extrato financeiro com filtros por status (`APPROVED`, `DENIED`, `EXPIRED`, `CANCELLED`).
+- `POST /api/wallet/withdrawals` *(Bearer)*: Solicitação de saque Pix.
+- `GET /api/wallet/withdrawals/:id` *(Bearer)*: Status de saque específico.
 - `POST /api/webhooks`: Endpoint receptor de callbacks com validação `X-Lera-Box-Signature` e idempotência.
+- `POST /api/webhooks/setup` *(Bearer)*: Cadastra os 3 callbacks obrigatórios no gateway (também disponível na UI do Dashboard).
 
 ---
 

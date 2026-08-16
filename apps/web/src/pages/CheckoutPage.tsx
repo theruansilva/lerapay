@@ -331,11 +331,11 @@ export function CheckoutPage() {
   return (
     <div className="min-h-screen bg-black text-slate-100 py-12 px-4 flex items-center justify-center font-sans relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#958BC2]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-start relative z-10">
         {/* Left Column: Order Summary */}
-        <div className="md:col-span-5 bg-[#141414] border border-[#282828] rounded-3xl p-7 shadow-2xl space-y-6">
+        <div className="md:col-span-5 bg-brand-surface border border-brand-border rounded-3xl p-7 shadow-2xl space-y-6">
           <div className="flex items-center gap-3">
             <a href="/" className="flex items-center gap-2">
               <img src="/assets/logo.png" alt="Lera Pay" className="h-8 w-auto object-contain" />
@@ -346,13 +346,13 @@ export function CheckoutPage() {
             </div>
           </div>
 
-          <div className="border-t border-b border-[#282828] py-5 space-y-2">
+          <div className="border-t border-b border-brand-border py-5 space-y-2">
             <h2 className="text-xl font-bold text-white leading-tight">{link?.title}</h2>
             {link?.description && <p className="text-xs text-slate-400 leading-relaxed">{link.description}</p>}
 
             <div className="pt-3">
               <span className="text-xs text-slate-400 block mb-1 font-semibold uppercase tracking-wider">Total a pagar:</span>
-              <div className="text-3xl font-black text-[#958BC2] font-mono">
+              <div className="text-3xl font-black text-brand-primary font-mono">
                 {((link?.amountCents || 0) / 100).toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL',
@@ -362,13 +362,13 @@ export function CheckoutPage() {
           </div>
 
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-[#958BC2]" />
+            <ShieldCheck className="w-4 h-4 text-brand-primary" />
             <span>Processamento criptografado pelo Lera Box Gateway</span>
           </div>
         </div>
 
         {/* Right Column: Payment Form */}
-        <div className="md:col-span-7 bg-[#141414] border border-[#282828] rounded-3xl p-7 shadow-2xl space-y-6">
+        <div className="md:col-span-7 bg-brand-surface border border-brand-border rounded-3xl p-7 shadow-2xl space-y-6">
           {error && (
             <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs">
               {error}
@@ -376,7 +376,7 @@ export function CheckoutPage() {
           )}
 
           {/* Payment Method Selector */}
-          <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#0E0E0E] rounded-2xl border border-[#282828]">
+          <div className="grid grid-cols-2 gap-3 p-1.5 bg-brand-surface-dark rounded-2xl border border-brand-border">
             <button
               type="button"
               onClick={() => {
@@ -384,7 +384,7 @@ export function CheckoutPage() {
                 setActiveOrder(null);
               }}
               className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'PIX'
-                ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
+                ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30'
                 : 'text-slate-400 hover:text-white'
                 }`}
             >
@@ -397,7 +397,7 @@ export function CheckoutPage() {
                 setActiveOrder(null);
               }}
               className={`flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition ${method === 'CARD'
-                ? 'bg-[#958BC2] text-white shadow-lg shadow-[#958BC2]/30'
+                ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30'
                 : 'text-slate-400 hover:text-white'
                 }`}
             >
@@ -418,7 +418,7 @@ export function CheckoutPage() {
                       value={pixPayerName}
                       onChange={(e) => setPixPayerName(e.target.value)}
                       placeholder="Nome do pagador"
-                      className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
+                      className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary transition"
                     />
                   </div>
 
@@ -430,7 +430,7 @@ export function CheckoutPage() {
                       value={pixPayerEmail}
                       onChange={(e) => setPixPayerEmail(e.target.value)}
                       placeholder="email@pagador.com"
-                      className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
+                      className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary transition"
                     />
                   </div>
 
@@ -449,20 +449,20 @@ export function CheckoutPage() {
                       onChange={handlePixDocChange}
                       placeholder="000.000.000-00"
                       maxLength={14}
-                      className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#958BC2] transition"
+                      className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-brand-primary transition"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={pixLoading}
-                    className="w-full py-3.5 bg-[#958BC2] hover:bg-[#7a6fa8] text-white font-bold rounded-xl text-sm transition shadow-lg shadow-[#958BC2]/25 disabled:opacity-50 mt-4"
+                    className="w-full py-3.5 bg-brand-primary hover:bg-brand-primary-hover text-white font-bold rounded-xl text-sm transition shadow-lg shadow-brand-primary/25 disabled:opacity-50 mt-4"
                   >
                     {pixLoading ? 'Gerando QR Code...' : 'Gerar QR Code Pix'}
                   </button>
                 </form>
               ) : (
-                <div className="text-center space-y-5 bg-[#0E0E0E] p-6 rounded-2xl border border-[#282828]">
+                <div className="text-center space-y-5 bg-brand-surface-dark p-6 rounded-2xl border border-brand-border">
                   <div className="inline-block p-4 bg-white rounded-2xl shadow-xl">
                     <QRCodeSVG
                       value={activeOrder.pixEmv || `https://lerapay.com/pay/${activeOrder.externalReference}`}
@@ -479,7 +479,7 @@ export function CheckoutPage() {
                     <div className="space-y-2">
                       <button
                         onClick={copyEmvToClipboard}
-                        className="w-full flex items-center justify-center gap-2 py-3 bg-[#1F1F1F] hover:bg-[#282828] text-[#958BC2] font-bold text-xs rounded-xl border border-[#333333] transition"
+                        className="w-full flex items-center justify-center gap-2 py-3 bg-brand-surface-input hover:bg-brand-border text-brand-primary font-bold text-xs rounded-xl border border-brand-border-input transition"
                       >
                         <Copy className="w-4 h-4" />
                         {copiedEmv ? 'Código Copiado com Sucesso!' : 'Copiar Código Pix Copia e Cola'}
@@ -487,7 +487,7 @@ export function CheckoutPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-center gap-2 text-xs text-[#958BC2] font-medium animate-pulse">
+                  <div className="flex items-center justify-center gap-2 text-xs text-brand-primary font-medium animate-pulse">
                     <Clock className="w-4 h-4" /> Aguardando confirmação do pagamento...
                   </div>
                 </div>
@@ -502,7 +502,7 @@ export function CheckoutPage() {
                 <div className="flex justify-between items-center mb-1.5">
                   <label className="block text-xs font-semibold text-slate-300">Número do Cartão</label>
                   {cardBrand && (
-                    <span className="text-[11px] px-2 py-0.5 rounded bg-[#958BC2]/20 text-[#958BC2] font-bold border border-[#958BC2]/30">
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-brand-primary/20 text-brand-primary font-bold border border-brand-primary/30">
                       {cardBrand}
                     </span>
                   )}
@@ -515,7 +515,7 @@ export function CheckoutPage() {
                     onChange={handleCardNumberChange}
                     placeholder="0000 0000 0000 0000"
                     maxLength={19}
-                    className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#958BC2] transition"
+                    className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-brand-primary transition"
                   />
                   <CreditCard className="absolute right-3.5 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
                 </div>
@@ -529,7 +529,7 @@ export function CheckoutPage() {
                   value={cardHolder}
                   onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
                   placeholder="NOME COMO NO CARTÃO"
-                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
+                  className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary transition"
                 />
               </div>
 
@@ -543,7 +543,7 @@ export function CheckoutPage() {
                     value={cardMonth}
                     onChange={handleCardMonthChange}
                     placeholder="MM"
-                    className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
+                    className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-brand-primary transition"
                   />
                 </div>
                 <div>
@@ -555,7 +555,7 @@ export function CheckoutPage() {
                     value={cardYear}
                     onChange={handleCardYearChange}
                     placeholder="AA"
-                    className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
+                    className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-brand-primary transition"
                   />
                 </div>
                 <div>
@@ -567,7 +567,7 @@ export function CheckoutPage() {
                     value={cardCvv}
                     onChange={handleCardCvvChange}
                     placeholder={cardBrand === 'Amex' ? '1234' : '123'}
-                    className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-[#958BC2] transition"
+                    className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm text-center font-mono focus:outline-none focus:border-brand-primary transition"
                   />
                 </div>
               </div>
@@ -577,7 +577,7 @@ export function CheckoutPage() {
                 <select
                   value={cardInstallments}
                   onChange={(e) => setCardInstallments(Number(e.target.value))}
-                  className="w-full bg-[#1F1F1F] border border-[#333333] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#958BC2] transition"
+                  className="w-full bg-brand-surface-input border border-brand-border-input rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-primary transition"
                 >
                   {installmentPlans.map((plan) => (
                     <option key={plan.installments} value={plan.installments}>
@@ -599,7 +599,7 @@ export function CheckoutPage() {
               <button
                 type="submit"
                 disabled={cardLoading}
-                className="w-full py-3.5 bg-[#958BC2] hover:bg-[#7a6fa8] text-white font-bold rounded-xl text-sm transition shadow-lg shadow-[#958BC2]/25 disabled:opacity-50 mt-4 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-brand-primary hover:bg-brand-primary-hover text-white font-bold rounded-xl text-sm transition shadow-lg shadow-brand-primary/25 disabled:opacity-50 mt-4 flex items-center justify-center gap-2"
               >
                 <Lock className="w-4 h-4" />
                 {cardLoading ? 'Processando Pagamento...' : 'Confirmar Pagamento'}

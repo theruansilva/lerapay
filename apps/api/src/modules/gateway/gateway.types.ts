@@ -1,5 +1,9 @@
 export interface GatewayLoginResponse {
-  token: string;
+  access_token?: string;
+  token?: string;
+  token_type?: string;
+  codigoCliente?: number | string;
+  chaveLoja?: string;
   CodigoCliente?: string;
   ChaveLoja?: string;
 }
@@ -12,51 +16,77 @@ export interface GatewayUserMeResponse {
 }
 
 export interface GatewayFeeItem {
+  id?: string;
   installments: number;
   feePercent: number;
+  feePercentFormatted?: string;
   brand?: string;
 }
 
 export interface GatewayPixPaymentRequest {
   amount: number; // in cents
-  externalReference: string;
+  payerDocument: string;
+  externalReference?: string;
+  description?: string;
   payerName?: string;
   payerEmail?: string;
-  payerDocument?: string;
 }
 
 export interface GatewayPixPaymentResponse {
   id: string;
-  txid: string;
+  type?: string;
   status: 'PENDING' | 'APPROVED' | 'DENIED' | 'EXPIRED';
+  amount: number;
+  description?: string;
+  message?: string;
+  metadata?: {
+    txid?: string;
+    emv?: string;
+    qrCodeBase64?: string;
+    externalReference?: string;
+    payerDocument?: string;
+    CodigoCliente?: number | string;
+    ChaveLoja?: string;
+    [key: string]: unknown;
+  };
+  txid?: string;
   qrCodeBase64?: string;
   emv?: string;
-  amount: number;
-  externalReference: string;
+  externalReference?: string;
+  walletBalance?: number;
 }
 
 export interface GatewayCardPaymentRequest {
   amount: number; // in cents
-  externalReference: string;
   cardNumber: string;
-  cardHolderName: string;
-  cardExpirationMonth: string;
-  cardExpirationYear: string;
-  cardCvv: string;
+  cardHolderName?: string;
+  cardHolder?: string;
+  cardExpirationMonth?: string;
+  expiryMonth?: string;
+  cardExpirationYear?: string;
+  expiryYear?: string;
+  cardCvv?: string;
+  cvv?: string;
   installments: number;
   feePercent: number;
   brand?: string;
+  description?: string;
+  externalReference?: string;
 }
 
 export interface GatewayCardPaymentResponse {
   id: string;
+  type?: string;
   status: 'APPROVED' | 'DENIED' | 'PENDING';
   amount: number;
-  installments: number;
-  feePercent: number;
-  externalReference: string;
+  installments?: number;
+  feePercent?: number;
+  externalReference?: string;
+  message?: string;
+  denialReason?: string;
   cardBrand?: string;
   cardLast4?: string;
+  walletBalance?: number;
 }
 
 export interface GatewayWalletResponse {
