@@ -12,7 +12,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@ne
 import { AuthGuard } from '@nestjs/passport';
 import { WalletService } from './wallet.service';
 import { WithdrawalService } from './withdrawal.service';
-import { CreateWithdrawalDto } from './dto/withdrawal.dto';
+import { CreateWithdrawalDto, GetStatementQueryDto } from './dto/withdrawal.dto';
 
 @ApiTags('Wallet')
 @Controller('api/wallet')
@@ -33,17 +33,12 @@ export class WalletController {
 
   @Get('transactions')
   @ApiOperation({ summary: 'Get filtered financial statement transactions' })
-  @ApiQuery({ name: 'status', required: false, enum: ['APPROVED', 'DENIED', 'EXPIRED', 'CANCELLED'] })
-  @ApiQuery({ name: 'type', required: false, enum: ['PIX', 'CARD'] })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'List of transactions' })
   async getStatement(
     @Request() req: any,
-    @Query('status') status?: 'APPROVED' | 'DENIED' | 'EXPIRED' | 'CANCELLED',
-    @Query('type') type?: 'PIX' | 'CARD',
-    @Query('limit') limit?: number,
+    @Query() query: GetStatementQueryDto,
   ) {
-    return this.walletService.getStatement(req.user.id, { status, type, limit });
+    return this.walletService.getStatement(req.user.id, query);
   }
 
   @Post('withdrawals')

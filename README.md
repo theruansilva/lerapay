@@ -63,7 +63,7 @@ git clone https://github.com/SEU_USUARIO/nest.git
 cd nest
 ```
 
-2. Configure as variáveis de ambiente (opcional para simulação local, ou insira as credenciais reais do gateway):
+2. Configure as variáveis de ambiente com as credenciais reais da sua conta no gateway Lera Box (não há fallback de simulação local):
 ```bash
 cp .env.example .env
 ```
@@ -141,3 +141,26 @@ Acesse a documentação interativa completa em:
 2. **Idempotência**: Todos os webhooks recebidos são gravados na tabela `webhook_events`. Eventos repetidos para a mesma `externalReference` são reconhecidos (200 OK) sem duplicar atualizações de saldo ou pedidos.
 3. **Validação de Assinatura**: O cabeçalho `X-Lera-Box-Signature` é verificado via HMAC SHA256 antes da execução de transações.
 4. **Precisão Monetária**: Todos os valores são manipulados como inteiros em centavos (R$ 10,00 = `1000`), eliminando discrepâncias de ponto flutuante.
+
+---
+
+## 🔗 Configuração de Webhooks (Callbacks)
+
+A aplicação BaaS suporta o recebimento e processamento assíncrono de eventos do gateway para atualizar o status de pagamentos Pix, pagamentos por cartão de crédito e solicitações de saque.
+
+### 1. Configurando a Assinatura (HMAC)
+No seu painel do lojista no gateway Lera Box, configure a chave secreta de webhook. No arquivo `.env` da aplicação BaaS, defina a variável `GATEWAY_WEBHOOK_SECRET` com o mesmo valor configurado no painel. O cabeçalho `x-lera-box-signature` será validado contra os bytes brutos do corpo da requisição (raw body).
+
+### 2. Cadastro Automatizado dos Callbacks
+Você deve registrar a URL pública da sua API BaaS para receber os eventos do gateway. Para facilitar, a API expõe uma rota autenticada que cadastra os três tipos obrigatórios de eventos (`PAYMENT_PIX`, `PAYMENT_CARD` e `WITHDRAWAL`) de uma vez no gateway:
+
+* **Método**: `POST`
+* **Rota**: `/api/webhooks/setup`
+* **Headers**: `Authorization: Bearer <seu_token_jwt>`
+* **Corpo (JSON)**:
+```json
+{
+  "url": "https://sua-api.seudominio.com/api/webhooks"
+}
+```
+Isso fará o cadastro das três rotas de callback de forma automatizada no gateway sob as credenciais do merchant autenticado.

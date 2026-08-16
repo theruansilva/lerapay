@@ -5,10 +5,15 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
+
+  const corsOrigins = process.env.CORS_ALLOWED_ORIGINS;
+  const isProd = process.env.NODE_ENV === 'production';
 
   app.enableCors({
-    origin: '*',
+    origin: isProd
+      ? (corsOrigins ? corsOrigins.split(',').map((o) => o.trim()) : [])
+      : '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: '*',
   });

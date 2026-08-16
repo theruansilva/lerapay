@@ -128,7 +128,7 @@
 **Gate**: quick
 **Commit**: `🐛 fix(webhooks): verify and deduplicate callbacks`
 
-### T9: Validate trust boundaries and finish checkout
+### [x] T9: Validate trust boundaries and finish checkout
 **What**: Strengthen financial DTO validation, restrict production CORS, add printable approved receipt, and correct README claims.
 **Where**: `apps/api/src/modules/checkout/dto/checkout.dto.ts`
 **Depends on**: T4, T6, T7, T8
