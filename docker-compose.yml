@@ -22,10 +22,11 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+      target: development
     container_name: lerapay_api
     restart: unless-stopped
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3000
       DB_HOST: mysql
       DB_PORT: 3306
@@ -42,6 +43,13 @@ services:
       GATEWAY_WEBHOOK_SECRET: ${GATEWAY_WEBHOOK_SECRET:-}
     ports:
       - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/api/src
+          target: /app/apps/api/src
+        - action: rebuild
+          path: ./apps/api/package.json
     depends_on:
       mysql:
         condition: service_healthy
@@ -50,12 +58,23 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      target: development
     container_name: lerapay_web
     restart: unless-stopped
     environment:
       VITE_API_URL: http://localhost:3000
     ports:
-      - "5173:80"
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+        - action: sync
+          path: ./apps/web/public
+          target: /app/apps/web/public
+        - action: rebuild
+          path: ./apps/web/package.json
     depends_on:
       - api
 

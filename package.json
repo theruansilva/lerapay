@@ -1,5 +1,7 @@
 {
   "name": "lera-pay-baas",
+  "license": "MIT",
+  "author": "Ruan Silva",
   "version": "1.0.0",
   "private": true,
   "description": "Banking as a Service (BaaS) platform integrated with Lera Box / BranchPay Gateway",
@@ -7,14 +9,15 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "bun --filter '*' build",
-    "test": "bun --filter '*' test",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:unit": "npm run test --workspaces --if-present",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "lint": "bun --filter '*' lint",
-    "dev": "bun --filter '*' dev"
+    "lint": "npm run lint --workspaces --if-present",
+    "dev": "npm run dev --workspaces --if-present"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
